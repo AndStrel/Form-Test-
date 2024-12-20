@@ -1,0 +1,349 @@
+/* Документ
+   ========================================================================== */
+
+/**
+ * 1. Исправить межстрочный интервал во всех браузерах.
+ * 2. Запретить изменение размера шрифта после изменения ориентации на устройствах iOS.
+ */
+
+html {
+  line-height: 1.15; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+
+/* Секции
+   ========================================================================== */
+
+/**
+ * Удалить отступы во всех браузерах.
+ */
+
+body {
+  margin: 0;
+}
+
+/**
+ * Сделать элемент `main` корректно отображаемым в IE.
+ */
+
+main {
+  display: block;
+}
+
+/**
+ * Исправить размер шрифта и отступы на элементах `h1` в контексте `section` и
+ * `article` в Chrome, Firefox и Safari.
+ */
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+/* Группировка контента
+   ========================================================================== */
+
+/**
+ * 1. Добавить правильный box-sizing в Firefox.
+ * 2. Показать переполнение в Edge и IE.
+ */
+
+hr {
+  box-sizing: content-box; /* 1 */
+  height: 0; /* 1 */
+  overflow: visible; /* 2 */
+}
+
+/**
+ * 1. Исправить наследование и масштабирование размера шрифта во всех браузерах.
+ * 2. Исправить странное масштабирование шрифта в `em` во всех браузерах.
+ */
+
+pre {
+  font-family: monospace, monospace; /* 1 */
+  font-size: 1em; /* 2 */
+}
+
+/* Семантика текста
+   ========================================================================== */
+
+/**
+ * Удалить серый фон на активных ссылках в IE 10.
+ */
+
+a {
+  background-color: transparent;
+}
+
+/**
+ * 1. Удалить нижнюю границу в Chrome 57-.
+ * 2. Добавить правильное текстовое оформление в Chrome, Edge, IE, Opera и Safari.
+ */
+
+abbr[title] {
+  border-bottom: none; /* 1 */
+  text-decoration: underline; /* 2 */
+  text-decoration: underline dotted; /* 2 */
+}
+
+/**
+ * Добавить правильную жирность шрифта в Chrome, Edge и Safari.
+ */
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+/**
+ * 1. Исправить наследование и масштабирование размера шрифта во всех браузерах.
+ * 2. Исправить странное масштабирование шрифта в `em` во всех браузерах.
+ */
+
+code,
+kbd,
+samp {
+  font-family: monospace, monospace; /* 1 */
+  font-size: 1em; /* 2 */
+}
+
+/**
+ * Добавить правильный размер шрифта во всех браузерах.
+ */
+
+small {
+  font-size: 80%;
+}
+
+/**
+ * Предотвратить изменение межстрочного интервала для элементов `sub` и `sup` во
+ * всех браузерах.
+ */
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/* Встраиваемый контент
+   ========================================================================== */
+
+/**
+ * Удалить границу у изображений внутри ссылок в IE 10.
+ */
+
+img {
+  border-style: none;
+}
+
+/* Формы
+   ========================================================================== */
+
+/**
+ * 1. Изменить стили шрифта во всех браузерах.
+ * 2. Удалить отступы в Firefox и Safari.
+ */
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  line-height: 1.15; /* 1 */
+  margin: 0; /* 2 */
+}
+
+/**
+ * Показать переполнение в IE.
+ * 1. Показать переполнение в Edge.
+ */
+
+button,
+input {
+  /* 1 */
+  overflow: visible;
+}
+
+/**
+ * Удалить наследование текста в кнопках и селектах в Edge, Firefox и IE.
+ * 1. Удалить наследование текста в Firefox.
+ */
+
+button,
+select {
+  /* 1 */
+  text-transform: none;
+}
+
+/**
+ * Исправить невозможность стилизации кликабельных типов в iOS и Safari.
+ */
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+}
+
+/**
+ * Удалить внутреннюю границу и отступы в Firefox.
+ */
+
+button::-moz-focus-inner,
+[type='button']::-moz-focus-inner,
+[type='reset']::-moz-focus-inner,
+[type='submit']::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+/**
+ * Восстановить стили фокуса, удаленные предыдущим правилом.
+ */
+
+button:-moz-focusring,
+[type='button']:-moz-focusring,
+[type='reset']:-moz-focusring,
+[type='submit']:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+
+/**
+ * Исправить отступы в Firefox.
+ */
+
+fieldset {
+  padding: 0.35em 0.75em 0.625em;
+}
+
+/**
+ * 1. Исправить обтекание текста в Edge и IE.
+ * 2. Исправить наследование цвета из элементов `fieldset` в IE.
+ * 3. Удалить отступы, чтобы разработчики не столкнулись с неожиданными результатами,
+ *    когда сбрасывают `fieldset` в других браузерах.
+ */
+
+legend {
+  box-sizing: border-box; /* 1 */
+  color: inherit; /* 2 */
+  display: table; /* 1 */
+  max-width: 100%; /* 1 */
+  padding: 0; /* 3 */
+  white-space: normal; /* 1 */
+}
+
+/**
+ * Добавить правильное вертикальное выравнивание в Chrome, Firefox и Opera.
+ */
+
+progress {
+  vertical-align: baseline;
+}
+
+/**
+ * Удалить стандартную вертикальную полосу прокрутки в IE 10+.
+ */
+
+textarea {
+  overflow: auto;
+}
+
+/**
+ * 1. Добавить правильный box-sizing в IE 10.
+ * 2. Удалить отступы в IE 10.
+ */
+
+[type='checkbox'],
+[type='radio'] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+
+/**
+ * Исправить стиль курсора на кнопках увеличения и уменьшения в Chrome.
+ */
+
+[type='number']::-webkit-inner-spin-button,
+[type='number']::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/**
+ * 1. Исправить странный вид в Chrome и Safari.
+ * 2. Исправить стиль обводки в Safari.
+ */
+
+[type='search'] {
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
+}
+
+/**
+ * Удалить внутренние отступы в Chrome и Safari на macOS.
+ */
+
+[type='search']::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/**
+ * 1. Исправить невозможность стилизации кликабельных типов в iOS и Safari.
+ * 2. Изменить свойства шрифта на `inherit` в Safari.
+ */
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button; /* 1 */
+  font: inherit; /* 2 */
+}
+
+/* Интерактив
+   ========================================================================== */
+
+/*
+ * Добавить правильное отображение в Edge, IE 10+ и Firefox.
+ */
+
+details {
+  display: block;
+}
+
+/*
+ * Добавить правильное отображение во всех браузерах.
+ */
+
+summary {
+  display: list-item;
+}
+
+/* Прочее
+   ========================================================================== */
+
+/**
+ * Добавить правильное отображение в IE 10+.
+ */
+
+template {
+  display: none;
+}
+
+/**
+ * Добавить правильное отображение в IE 10.
+ */
+
+[hidden] {
+  display: none;
+}

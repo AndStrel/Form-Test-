@@ -1,0 +1,26 @@
+.button {
+  background-color: $primary-color; // Используем переменные из variables.scss
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+
+  &__icon {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &__primary {
+    background-color: $primary-color;
+  }
+
+  &__secondary {
+    background-color: $secondary-color;
+  }
+
+  &:hover {
+    opacity: 0.9;
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src", // Базовая директория для поиска модулей
+    "target": "ESNext", // Используем современные возможности JavaScript
+    "useDefineForClassFields": true, // Новая спецификация для полей классов
+    "lib": ["DOM", "DOM.Iterable", "ESNext"], // Библиотеки для работы с DOM и новыми стандартами JS
+    "allowJs": false, // Запрещаем использовать JavaScript файлы
+    "skipLibCheck": true, // Пропускаем проверку типов в зависимостях
+    "esModuleInterop": false, // Указываем, что не используем CommonJS
+    "allowSyntheticDefaultImports": true, // Разрешаем синтетические дефолтные импорты
+    "strict": true, // Включаем строгий режим для надёжности кода
+    "forceConsistentCasingInFileNames": true, // Проверка регистра в путях файлов
+    "module": "ESNext", // Используем модули ES
+    "moduleResolution": "Node", // Разрешаем модули как в Node.js
+    "resolveJsonModule": true, // Поддержка импорта JSON
+    "isolatedModules": true, // Проверка на соответствие модульным требованиям
+    "noEmit": true, // Не генерируем JS-файлы
+    "jsx": "react-jsx", // Поддержка синтаксиса JSX для React
+    "paths": {
+      "@components/*": ["components/*"],
+      "@ui/*": ["components/ui/*"],
+      "@pages/*": ["pages/*"],
+      "@styles/*": ["styles/*"],
+      "@utils/*": ["utils/*"],
+      "@slices/*": ["utils/slices/*"],
+      "@assets/*": ["assets/*"]
+    }
+  },
+  "include": ["src"], // Включаем файлы в папке src
+  "exclude": ["node_modules", "dist"] // Исключаем node_modules и dist
+}
