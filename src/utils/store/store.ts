@@ -2,7 +2,7 @@ import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import { useDispatch as dispatchHook, useSelector as selectorHook } from 'react-redux';
 
 import formReducer from '@slices/formSlice';
-import usersReducer from '@slices/userSlice';
+import usersReducer from '@utils/slices/usersSlice';
 
 export const rootReducer = combineSlices({
   users: usersReducer,
