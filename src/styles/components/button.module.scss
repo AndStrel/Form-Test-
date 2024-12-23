@@ -1,4 +1,4 @@
-@use "@styles/utils/variables" as *;
+@use '@styles/utils/variables' as *;
 
 .button {
   background-color: $primary-color; // Используем переменные из variables.scss
