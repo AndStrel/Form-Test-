@@ -1,4 +1,4 @@
-import UserForm from '@components/userForm/userForm';
+import { UserForm } from '@components/userForm';
 import { HomePage } from '@pages/homePage';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
