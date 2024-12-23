@@ -5,9 +5,7 @@ import { UserFormUI } from '@ui/userForm/userFormUI';
 import { TFormValues } from 'types/types';
 import { Button, Form } from 'antd';
 
-export const UserForm: React.FC<{ onSubmit: (data: TFormValues) => void }> = ({
-  onSubmit,
-}) => {
+export const UserForm: React.FC = () => {
   const {
     control,
     handleSubmit,
@@ -20,8 +18,9 @@ export const UserForm: React.FC<{ onSubmit: (data: TFormValues) => void }> = ({
 
   const gender = watch('gender'); // Отслеживаем значение поля "Пол"
 
+  // Обработчик отправки формы
   const handleFormSubmit = (data: TFormValues) => {
-    onSubmit(data);
+    console.log(data);
     reset();
   };
 
@@ -30,7 +29,10 @@ export const UserForm: React.FC<{ onSubmit: (data: TFormValues) => void }> = ({
       <UserFormUI control={control} errors={errors} gender={gender} />
       <Form.Item>
         <Button type="primary" htmlType="submit">
-          Сохранить
+          Добавить
+        </Button>
+        <Button htmlType="reset" onClick={() => reset()}>
+          Отменить
         </Button>
       </Form.Item>
     </Form>

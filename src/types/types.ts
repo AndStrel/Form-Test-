@@ -1,4 +1,4 @@
-import { Control, FieldErrors, UseFormSetValue, UseFormSetError } from 'react-hook-form';
+import { Control, FieldErrors } from 'react-hook-form';
 
 export type TUser = {
   id: number;
@@ -19,4 +19,11 @@ export type UserFormUIProps = {
   control: Control<TFormValues>;
   errors: FieldErrors<TFormValues>;
   gender: string;
+};
+
+export type TUserSelectUiProps = {
+  control: Control<TFormValues>;
+  errors: FieldErrors<TFormValues>;
+  addedUsers: number[];
+  onAddNewUser: () => void;
 };

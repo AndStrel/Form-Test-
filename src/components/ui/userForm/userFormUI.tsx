@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { Controller } from 'react-hook-form';
 import { UserFormUIProps } from 'types/types';
 import { Form, Typography } from 'antd';
+import { UserSelect } from '@components/select/userSelect';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -14,22 +15,24 @@ export const UserFormUI: React.FC<UserFormUIProps> = ({
 }) => (
   <>
     <Form.Item
-      label="Имя пользователя"
       required
       help={errors.user && <Text type="danger">{errors.user.message}</Text>}
     >
-      <Controller
-        name="user"
+      <UserSelect
         control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <Input {...field} placeholder="Введите имя пользователя" />
-        )}
+        errors={errors}
+        addedUsers={
+          [
+            /* IDs уже добавленных пользователей */
+          ]
+        }
+        onAddNewUser={() => {
+          /* Открыть модальное окно для нового пользователя */
+        }}
       />
     </Form.Item>
 
     <Form.Item
-      label="Пол"
       required
       help={errors.gender && <Text type="danger">{errors.gender.message}</Text>}
     >
@@ -47,7 +50,6 @@ export const UserFormUI: React.FC<UserFormUIProps> = ({
     </Form.Item>
 
     <Form.Item
-      label="Роль"
       required
       help={errors.role && <Text type="danger">{errors.role.message}</Text>}
     >
@@ -74,7 +76,6 @@ export const UserFormUI: React.FC<UserFormUIProps> = ({
     </Form.Item>
 
     <Form.Item
-      label="Дата рождения"
       required
       help={
         errors.birthDate && (
