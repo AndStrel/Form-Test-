@@ -1,3 +1,4 @@
+import UserTable from '@components/table/table';
 import { HomePageUI } from '@ui/pages';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,6 +16,7 @@ export const HomePage: React.FC = () => {
         description="Добро пожаловать!"
         handleLogin={handleLogin}
       />
+      <UserTable />
     </>
   );
 };
