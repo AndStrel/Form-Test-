@@ -1,3 +1,5 @@
+import { Control, FieldErrors } from 'react-hook-form';
+
 export type TUser = {
   id: number;
   email: string;
@@ -6,10 +8,22 @@ export type TUser = {
   avatar: string;
 };
 
-// export type TUnknownResource = {
-//   id: number;
-//   name: string;
-//   year: number;
-//   color: string;
-//   pantone_value: string;
-// };
+export type TFormValues = {
+  user: string;
+  gender: 'Мужской' | 'Женский';
+  role: 'Доктор' | 'Медбрат' | 'Медсестра';
+  birthDate: string;
+};
+
+export type UserFormUIProps = {
+  control: Control<TFormValues>;
+  errors: FieldErrors<TFormValues>;
+  gender: string;
+};
+
+export type TUserSelectUiProps = {
+  control: Control<TFormValues>;
+  errors: FieldErrors<TFormValues>;
+  addedUsers: number[];
+  onAddNewUser: () => void;
+};

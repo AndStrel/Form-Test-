@@ -16,18 +16,6 @@ export default defineConfig({
       '@assets': path.resolve(__dirname, 'src/assets'),
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `
-          @import "@styles/base/reset";
-          @import "@styles/base/typography";
-          @import "@styles/utils/variables";
-          @import "@styles/utils/mixins";
-        `,
-      },
-    },
-  },
   server: {
     port: 3333,
     open: true,
