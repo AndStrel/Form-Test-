@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import validationSchema from '@utils/validation/validationShema'; // Импортируем схему валидации
@@ -6,7 +5,7 @@ import { UserFormUI } from '@ui/userForm/userFormUI';
 import { TFormValues } from 'types/types';
 import { Button, Form } from 'antd';
 
-const UserForm: React.FC<{ onSubmit: (data: TFormValues) => void }> = ({
+export const UserForm: React.FC<{ onSubmit: (data: TFormValues) => void }> = ({
   onSubmit,
 }) => {
   const {
@@ -37,5 +36,3 @@ const UserForm: React.FC<{ onSubmit: (data: TFormValues) => void }> = ({
     </Form>
   );
 };
-
-export default UserForm;
