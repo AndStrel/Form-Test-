@@ -5,11 +5,3 @@ export type TUser = {
   last_name: string;
   avatar: string;
 };
-
-// export type TUnknownResource = {
-//   id: number;
-//   name: string;
-//   year: number;
-//   color: string;
-//   pantone_value: string;
-// };
