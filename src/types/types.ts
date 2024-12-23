@@ -11,7 +11,7 @@ export type TUser = {
 export type TFormValues = {
   user: string;
   gender: 'Мужской' | 'Женский';
-  role: 'Доктор' | 'Медбрат' | 'Медсестра' | 'Админ';
+  role: 'Доктор' | 'Медбрат' | 'Медсестра';
   birthDate: string;
 };
 
