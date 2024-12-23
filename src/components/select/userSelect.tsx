@@ -4,19 +4,22 @@ import { useEffect, useState } from 'react';
 import { getUsers } from '@utils/api/users';
 import { TUser, TUserSelectUiProps } from 'types/types';
 import debounce from 'lodash/debounce';
+import { openDrawer } from '@utils/slices/drawerSlice';
+import { useAppDispatch } from '@utils/store';
 
 const { Option } = Select;
 
 export const UserSelect: React.FC<TUserSelectUiProps> = ({
   control,
   addedUsers,
-  onAddNewUser,
 }) => {
   const [users, setUsers] = useState<TUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const dispatch = useAppDispatch();
 
   // Получение пользователей (с пагинацией и фильтром)
   const fetchUsers = async (page: number, search = '') => {
@@ -87,7 +90,7 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
                     cursor: 'pointer',
                     color: '#1890ff',
                   }}
-                  onClick={onAddNewUser}
+                  onClick={() => dispatch(openDrawer())}
                 >
                   Добавить пользователя
                 </div>

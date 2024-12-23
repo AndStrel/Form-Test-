@@ -1,11 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-interface TFormValues {
-  user: string;
-  gender: 'Мужской' | 'Женский';
-  role: 'Доктор' | 'Медбрат' | 'Медсестра';
-  birthDate: string;
-}
+import { TFormValues } from 'types/types';
 
 const initialState: TFormValues = {
   user: '',

@@ -25,5 +25,4 @@ export type TUserSelectUiProps = {
   control: Control<TFormValues>;
   errors: FieldErrors<TFormValues>;
   addedUsers: number[];
-  onAddNewUser: () => void;
 };

@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import validationSchema from '@utils/validation/validationShema'; // Импортируем схему валидации
 import { UserFormUI } from '@ui/userForm/userFormUI';
 import { TFormValues } from 'types/types';
-import { Button, Form } from 'antd';
+import { Button, Form, Space } from 'antd';
 
 export const UserForm: React.FC = () => {
   const {
@@ -13,7 +13,7 @@ export const UserForm: React.FC = () => {
     reset,
     formState: { errors },
   } = useForm<TFormValues>({
-    resolver: yupResolver(validationSchema), // Подключаем yupResolver
+    resolver: yupResolver(validationSchema),
   });
 
   const gender = watch('gender'); // Отслеживаем значение поля "Пол"
@@ -28,12 +28,14 @@ export const UserForm: React.FC = () => {
     <Form layout="vertical" onFinish={handleSubmit(handleFormSubmit)}>
       <UserFormUI control={control} errors={errors} gender={gender} />
       <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Добавить
-        </Button>
-        <Button htmlType="reset" onClick={() => reset()}>
-          Отменить
-        </Button>
+        <Space style={{ marginTop: 16 }}>
+          <Button type="primary" htmlType="submit">
+            Добавить
+          </Button>
+          <Button htmlType="reset" onClick={() => reset()}>
+            Отменить
+          </Button>
+        </Space>
       </Form.Item>
     </Form>
   );
