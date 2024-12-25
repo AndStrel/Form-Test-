@@ -9,41 +9,7 @@ import { TUser } from 'types/types';
 
 describe('usersSlice', () => {
   const initialState = {
-    users: [
-      {
-        id: 1,
-        avatar: 'https://i.pravatar.cc/50',
-        first_name: 'Казимир',
-        last_name: 'Антонина',
-        full_name: 'Казимир Антонина',
-        email: 'mail@mail.ru',
-        gender: 'Женский',
-        birthDate: '24-10-1998',
-        role: 'Медсестра',
-      },
-      {
-        id: 2,
-        email: 'newuser@mail.ru',
-        first_name: 'Варфоломей',
-        last_name: 'Иванов',
-        full_name: 'Варфоломей Иванов',
-        avatar: 'https://i.pravatar.cc/20',
-        gender: 'Мужской',
-        birthDate: '15-12-1998',
-        role: 'Доктор',
-      },
-      {
-        id: 3,
-        avatar: 'https://i.pravatar.cc/40',
-        first_name: 'Иван',
-        last_name: 'Петров',
-        full_name: 'Иван Петров',
-        email: 'newuser@mail.ru',
-        gender: 'Мужской',
-        birthDate: '01-01-2000',
-        role: 'Доктор',
-      },
-    ],
+    users: [],
     loading: false,
     page: 1,
     hasMore: true,
@@ -55,6 +21,7 @@ describe('usersSlice', () => {
     first_name: 'Иван',
     last_name: 'Иванов',
     avatar: 'avatar_url',
+    birthDate: '24-10-1998',
   };
 
   it('Проверяем, что редьюсер возвращает начальное состояние при передаче undefined', () => {
@@ -101,15 +68,7 @@ describe('usersSlice', () => {
   it('Проверяем, что экшен appendUsers добавляет пользователей к текущим', () => {
     const usersList: TUser[] = [testUser];
     const updatedState = usersReducer(initialState, setUsers(usersList));
-    const newUsers: TUser[] = [
-      {
-        id: 2,
-        email: 'newuser@example.com',
-        first_name: 'Петр',
-        last_name: 'Петров',
-        avatar: 'new_avatar_url',
-      },
-    ];
+    const newUsers: TUser[] = [testUser];
     expect(usersReducer(updatedState, appendUsers(newUsers))).toEqual({
       users: [...usersList, ...newUsers],
       loading: false,

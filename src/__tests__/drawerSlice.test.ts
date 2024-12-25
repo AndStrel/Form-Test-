@@ -1,8 +1,9 @@
+import { TDrawerState } from 'types/types';
 import drawerReducer, { openDrawer, closeDrawer } from '../utils/slices/drawerSlice';
 
 describe('drawerSlice', () => {
-  const initialState = {
-    title: '',
+  const initialState: TDrawerState = {
+    isRedacting: false,
     open: false,
     user: undefined,
   };
@@ -14,7 +15,7 @@ describe('drawerSlice', () => {
   });
 
   it('должен устанавливать open в true при вызове openDrawer', () => {
-    const state = drawerReducer(initialState, openDrawer(''));
+    const state = drawerReducer(initialState, openDrawer());
     expect(state.open).toBe(true);
   });
 
