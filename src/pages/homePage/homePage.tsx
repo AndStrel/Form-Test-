@@ -1,29 +1,23 @@
-import { useNavigate } from 'react-router-dom';
-import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
-import { login } from '@slices/authSlice';
-import { useEffect } from 'react';
-import { HomePageUI } from '@ui/pages';
+import UserTable from '@components/table/tableUser';
+import { openDrawer, setIsRedacting, setUser } from '@utils/slices/drawerSlice';
+import { useAppDispatch } from '@utils/store';
+
+import { Button } from 'antd';
 
 export const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
-
-  const handleLogin = () => {
-    dispatch(login({ name: 'Sebastian', email: 'Sebastian@mail.ru' }));
+  const createUser = () => {
+    dispatch(setIsRedacting(false));
+    dispatch(setUser({}));
+    dispatch(openDrawer());
   };
-  // Если пользователь уже авторизован, перенаправляем его на страницу профиля
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/profile');
-    }
-  }, [isAuthenticated, navigate]);
 
   return (
-    <HomePageUI
-      title="Главная страница"
-      description="Добро пожаловать!"
-      handleLogin={handleLogin}
-    />
+    <>
+      <Button type="primary" onClick={() => createUser()}>
+        Создать нового пользователя
+      </Button>
+      <UserTable />
+    </>
   );
 };
