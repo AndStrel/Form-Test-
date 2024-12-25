@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useFormContext } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import validationSchema from '@utils/validation/validationShema'; // Импортируем схему валидации
 import { UserFormUI } from '@ui/userForm/userFormUI';
@@ -14,14 +14,15 @@ export const UserForm: React.FC = () => {
     formState: { errors },
   } = useForm<TFormValues>({
     resolver: yupResolver(validationSchema),
+    defaultValues: {}, // Инициализируем пустыми значениями
   });
 
   const gender = watch('gender'); // Отслеживаем значение поля "Пол"
 
   // Обработчик отправки формы
   const handleFormSubmit = (data: TFormValues) => {
-    console.log(data);
     reset();
+    console.log(data);
   };
 
   return (
@@ -30,7 +31,7 @@ export const UserForm: React.FC = () => {
       <Form.Item>
         <Space style={{ marginTop: 16 }}>
           <Button type="primary" htmlType="submit">
-            Добавить
+            Сохранить
           </Button>
           <Button htmlType="reset" onClick={() => reset()}>
             Отменить

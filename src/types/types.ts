@@ -2,10 +2,14 @@ import { Control, FieldErrors } from 'react-hook-form';
 
 export type TUser = {
   id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  avatar: string;
+  email?: string;
+  first_name?: string;
+  last_name?: string;
+  full_name?: string;
+  avatar?: string;
+  gender?: string;
+  birthDate?: string;
+  role?: string;
 };
 
 export type TFormValues = {
@@ -26,3 +30,12 @@ export type TUserSelectUiProps = {
   errors: FieldErrors<TFormValues>;
   addedUsers: number[];
 };
+
+export type TDrawerState = {
+  open: boolean;
+  title?: string;
+  user: TUser;
+};
+
+// export type TGender = 'Мужской' | 'Женский' | undefined;
+// export type TRole = 'Доктор' | 'Медбрат' | 'Медсестра' | undefined;

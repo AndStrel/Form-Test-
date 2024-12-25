@@ -1,42 +1,43 @@
 import React, { useState } from 'react';
 import { Table, Button, Modal, message } from 'antd';
-
-interface User {
-  id: number;
-  avatar: string;
-  fullName: string;
-  email: string;
-  gender: string;
-  birthDate: string;
-  role: string;
-}
+import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
+import { openDrawer, setUser } from '@utils/slices/drawerSlice';
+import { deleteUser } from '@utils/api/users';
+import { setLoading, setUsers } from '@utils/slices/usersSlice';
+import { TUser } from 'types/types';
 
 const UserTable: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: 1,
-      avatar: 'https://via.placeholder.com/40',
-      fullName: 'Казимир Антонина Р.',
-      email: 'mail@mail.ru',
-      gender: 'Женский',
-      birthDate: '24.10.1998',
-      role: 'Медсестра',
-    },
-  ]);
+  const loading = useAppSelector((state: RootState) => state.users.loading);
+  const users = useAppSelector((state: RootState) => state.users.users);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
 
-  const handleEdit = (user: User) => {
-    setEditingUser(user);
-    setIsModalVisible(true);
+  const dispatch = useAppDispatch();
+
+  const handleEdit = (user: TUser) => {
+    dispatch(setUser(user));
+    dispatch(openDrawer('Редактировать пользователя'));
+  };
+
+  const fetchDelete = (userId: number) => {
+    setLoading(true);
+    deleteUser(userId)
+      .then(() => {
+        message.success('Пользователь успешно удален');
+      })
+      .catch((error) => {
+        console.error('Ошибка при удалении пользователя:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleDelete = (userId: number) => {
     Modal.confirm({
-      title: 'Вы уверены, что хотите удалить пользователя?',
+      title: `Вы хотите удалить пользователя ${users.find((user) => user.id === userId)?.full_name}?`,
       onOk: () => {
-        setUsers((prev) => prev.filter((user) => user.id !== userId));
-        message.success('Пользователь удален');
+        fetchDelete(userId);
+        dispatch(setUsers(users.filter((user) => user.id !== userId))); // Удаляем пользователя из списка);
       },
     });
   };
@@ -56,8 +57,8 @@ const UserTable: React.FC = () => {
     },
     {
       title: 'ФИО пользователя',
-      dataIndex: 'fullName',
-      key: 'fullName',
+      dataIndex: 'full_name',
+      key: 'full_name',
     },
     {
       title: 'Контактные данные',
@@ -82,7 +83,7 @@ const UserTable: React.FC = () => {
     {
       title: '',
       key: 'actions',
-      render: (_: any, user: User) => (
+      render: (_: any, user: TUser) => (
         <div style={{ display: 'flex', gap: '10px' }}>
           <Button type="link" onClick={() => handleEdit(user)}>
             ✏️ Редактировать
@@ -102,15 +103,6 @@ const UserTable: React.FC = () => {
         columns={columns}
         pagination={false}
       />
-      <Modal
-        open={isModalVisible}
-        title="Редактировать пользователя"
-        onCancel={() => setIsModalVisible(false)}
-        footer={null}
-      >
-        {/* Здесь будет форма редактирования */}
-        <p>Форма редактирования пользователя</p>
-      </Modal>
     </div>
   );
 };

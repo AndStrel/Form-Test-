@@ -5,13 +5,14 @@ import { getUsers } from '@utils/api/users';
 import { TUser, TUserSelectUiProps } from 'types/types';
 import debounce from 'lodash/debounce';
 import { openDrawer } from '@utils/slices/drawerSlice';
-import { useAppDispatch } from '@utils/store';
+import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
 
 const { Option } = Select;
 
 export const UserSelect: React.FC<TUserSelectUiProps> = ({
   control,
   addedUsers,
+  errors,
 }) => {
   const [users, setUsers] = useState<TUser[]>([]);
   const [loading, setLoading] = useState(false);
@@ -90,7 +91,9 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
                     cursor: 'pointer',
                     color: '#1890ff',
                   }}
-                  onClick={() => dispatch(openDrawer())}
+                  onClick={() => {
+                    dispatch(openDrawer('Добавить нового пользователя'));
+                  }}
                 >
                   Добавить пользователя
                 </div>

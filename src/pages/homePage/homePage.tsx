@@ -1,21 +1,20 @@
-import UserTable from '@components/table/table';
-import { HomePageUI } from '@ui/pages';
-import { useNavigate } from 'react-router-dom';
+import UserTable from '@components/table/tableUser';
+import { openDrawer } from '@utils/slices/drawerSlice';
+import { useAppDispatch } from '@utils/store';
+
+import { Button } from 'antd';
 
 export const HomePage: React.FC = () => {
-  const navigate = useNavigate();
-
-  const handleLogin = () => {
-    navigate('/form');
+  const dispatch = useAppDispatch();
+  const createUser = () => {
+    dispatch(openDrawer('Добавить нового пользователя'));
   };
 
   return (
     <>
-      <HomePageUI
-        title="Главная страница"
-        description="Добро пожаловать!"
-        handleLogin={handleLogin}
-      />
+      <Button type="primary" onClick={() => createUser()}>
+        Создать нового пользователя
+      </Button>
       <UserTable />
     </>
   );

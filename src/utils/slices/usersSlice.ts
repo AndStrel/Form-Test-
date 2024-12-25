@@ -9,7 +9,41 @@ interface UsersState {
 }
 
 const initialState: UsersState = {
-  users: [],
+  users: [
+    {
+      id: 1,
+      avatar: 'https://i.pravatar.cc/50',
+      first_name: 'Казимир',
+      last_name: 'Антонина',
+      full_name: 'Казимир Антонина',
+      email: 'mail@mail.ru',
+      gender: 'Женский',
+      birthDate: '24-10-1998',
+      role: 'Медсестра',
+    },
+    {
+      id: 2,
+      email: 'newuser@mail.ru',
+      first_name: 'Варфоломей',
+      last_name: 'Иванов',
+      full_name: 'Варфоломей Иванов',
+      avatar: 'https://i.pravatar.cc/20',
+      gender: 'Мужской',
+      birthDate: '15-12-1998',
+      role: 'Доктор',
+    },
+    {
+      id: 3,
+      avatar: 'https://i.pravatar.cc/40',
+      first_name: 'Иван',
+      last_name: 'Петров',
+      full_name: 'Иван Петров',
+      email: 'newuser@mail.ru',
+      gender: 'Мужской',
+      birthDate: '01-01-2000',
+      role: 'Доктор',
+    },
+  ],
   loading: false,
   page: 1,
   hasMore: true,
