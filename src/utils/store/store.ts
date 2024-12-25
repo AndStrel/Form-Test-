@@ -1,12 +1,12 @@
 import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import { useDispatch as dispatchHook, useSelector as selectorHook } from 'react-redux';
 
-import formReducer from '@slices/formSlice';
 import usersReducer from '@utils/slices/usersSlice';
+import drawerReducer from '@slices/drawerSlice';
 
 export const rootReducer = combineSlices({
   users: usersReducer,
-  form: formReducer,
+  drawer: drawerReducer,
 });
 
 const store = configureStore({

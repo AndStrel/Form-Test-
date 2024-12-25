@@ -53,7 +53,7 @@ describe('API методы пользователей', () => {
 
   describe('getUserById', () => {
     it('должен возвращать данные пользователя по ID', async () => {
-      const mockData: TUser = {
+      const mockData: Partial<TUser> = {
         id: 1,
         email: 'test@example.com',
         first_name: 'Иван',

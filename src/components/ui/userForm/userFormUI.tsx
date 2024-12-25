@@ -26,9 +26,6 @@ export const UserFormUI: React.FC<UserFormUIProps> = ({
             /* IDs уже добавленных пользователей */
           ]
         }
-        onAddNewUser={() => {
-          /* Открыть модальное окно для нового пользователя */
-        }}
       />
     </Form.Item>
 

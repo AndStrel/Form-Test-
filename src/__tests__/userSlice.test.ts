@@ -21,6 +21,7 @@ describe('usersSlice', () => {
     first_name: 'Иван',
     last_name: 'Иванов',
     avatar: 'avatar_url',
+    birthDate: '24-10-1998',
   };
 
   it('Проверяем, что редьюсер возвращает начальное состояние при передаче undefined', () => {
@@ -29,7 +30,7 @@ describe('usersSlice', () => {
 
   it('Проверяем, что экшен setLoading обновляет флаг загрузки', () => {
     expect(usersReducer(initialState, setLoading(true))).toEqual({
-      users: [],
+      users: initialState.users,
       loading: true,
       page: 1,
       hasMore: true,
@@ -38,7 +39,7 @@ describe('usersSlice', () => {
 
   it('Проверяем, что экшен setPage обновляет номер страницы', () => {
     expect(usersReducer(initialState, setPage(2))).toEqual({
-      users: [],
+      users: initialState.users,
       loading: false,
       page: 2,
       hasMore: true,
@@ -47,7 +48,7 @@ describe('usersSlice', () => {
 
   it('Проверяем, что экшен setHasMore обновляет флаг hasMore', () => {
     expect(usersReducer(initialState, setHasMore(false))).toEqual({
-      users: [],
+      users: initialState.users,
       loading: false,
       page: 1,
       hasMore: false,
@@ -67,15 +68,7 @@ describe('usersSlice', () => {
   it('Проверяем, что экшен appendUsers добавляет пользователей к текущим', () => {
     const usersList: TUser[] = [testUser];
     const updatedState = usersReducer(initialState, setUsers(usersList));
-    const newUsers: TUser[] = [
-      {
-        id: 2,
-        email: 'newuser@example.com',
-        first_name: 'Петр',
-        last_name: 'Петров',
-        avatar: 'new_avatar_url',
-      },
-    ];
+    const newUsers: TUser[] = [testUser];
     expect(usersReducer(updatedState, appendUsers(newUsers))).toEqual({
       users: [...usersList, ...newUsers],
       loading: false,
