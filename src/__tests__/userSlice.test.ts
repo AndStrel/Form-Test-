@@ -9,7 +9,41 @@ import { TUser } from 'types/types';
 
 describe('usersSlice', () => {
   const initialState = {
-    users: [],
+    users: [
+      {
+        id: 1,
+        avatar: 'https://i.pravatar.cc/50',
+        first_name: 'Казимир',
+        last_name: 'Антонина',
+        full_name: 'Казимир Антонина',
+        email: 'mail@mail.ru',
+        gender: 'Женский',
+        birthDate: '24-10-1998',
+        role: 'Медсестра',
+      },
+      {
+        id: 2,
+        email: 'newuser@mail.ru',
+        first_name: 'Варфоломей',
+        last_name: 'Иванов',
+        full_name: 'Варфоломей Иванов',
+        avatar: 'https://i.pravatar.cc/20',
+        gender: 'Мужской',
+        birthDate: '15-12-1998',
+        role: 'Доктор',
+      },
+      {
+        id: 3,
+        avatar: 'https://i.pravatar.cc/40',
+        first_name: 'Иван',
+        last_name: 'Петров',
+        full_name: 'Иван Петров',
+        email: 'newuser@mail.ru',
+        gender: 'Мужской',
+        birthDate: '01-01-2000',
+        role: 'Доктор',
+      },
+    ],
     loading: false,
     page: 1,
     hasMore: true,
@@ -29,7 +63,7 @@ describe('usersSlice', () => {
 
   it('Проверяем, что экшен setLoading обновляет флаг загрузки', () => {
     expect(usersReducer(initialState, setLoading(true))).toEqual({
-      users: [],
+      users: initialState.users,
       loading: true,
       page: 1,
       hasMore: true,
@@ -38,7 +72,7 @@ describe('usersSlice', () => {
 
   it('Проверяем, что экшен setPage обновляет номер страницы', () => {
     expect(usersReducer(initialState, setPage(2))).toEqual({
-      users: [],
+      users: initialState.users,
       loading: false,
       page: 2,
       hasMore: true,
@@ -47,7 +81,7 @@ describe('usersSlice', () => {
 
   it('Проверяем, что экшен setHasMore обновляет флаг hasMore', () => {
     expect(usersReducer(initialState, setHasMore(false))).toEqual({
-      users: [],
+      users: initialState.users,
       loading: false,
       page: 1,
       hasMore: false,

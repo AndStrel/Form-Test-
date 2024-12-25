@@ -2,7 +2,9 @@ import drawerReducer, { openDrawer, closeDrawer } from '../utils/slices/drawerSl
 
 describe('drawerSlice', () => {
   const initialState = {
+    title: '',
     open: false,
+    user: undefined,
   };
 
   it('должен возвращать первоначальное состояние', () => {
@@ -12,12 +14,12 @@ describe('drawerSlice', () => {
   });
 
   it('должен устанавливать open в true при вызове openDrawer', () => {
-    const state = drawerReducer(initialState, openDrawer());
+    const state = drawerReducer(initialState, openDrawer(''));
     expect(state.open).toBe(true);
   });
 
   it('должен устанавливать open в false при вызове closeDrawer', () => {
-    const state = drawerReducer({ open: true }, closeDrawer());
+    const state = drawerReducer(initialState, closeDrawer());
     expect(state.open).toBe(false);
   });
 });

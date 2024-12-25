@@ -3,7 +3,7 @@ import { TDrawerState } from 'types/types';
 
 const initialState: TDrawerState = {
   open: false,
-  title: null,
+  title: '',
   user: undefined,
 };
 
@@ -20,7 +20,7 @@ const drawerSlice = createSlice({
     },
     closeDrawer: (state) => {
       state.open = false;
-      state.title = null;
+      state.title = '';
       state.user = undefined;
     },
   },

@@ -34,7 +34,7 @@ export type TUserSelectUiProps = {
 export type TDrawerState = {
   open: boolean;
   title?: string;
-  user: TUser;
+  user: TUser | undefined;
 };
 
 // export type TGender = 'Мужской' | 'Женский' | undefined;
