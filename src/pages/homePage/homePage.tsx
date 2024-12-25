@@ -1,5 +1,5 @@
 import UserTable from '@components/table/tableUser';
-import { openDrawer } from '@utils/slices/drawerSlice';
+import { openDrawer, setIsRedacting, setUser } from '@utils/slices/drawerSlice';
 import { useAppDispatch } from '@utils/store';
 
 import { Button } from 'antd';
@@ -7,7 +7,9 @@ import { Button } from 'antd';
 export const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const createUser = () => {
-    dispatch(openDrawer('Добавить нового пользователя'));
+    dispatch(setIsRedacting(false));
+    dispatch(setUser({}));
+    dispatch(openDrawer());
   };
 
   return (

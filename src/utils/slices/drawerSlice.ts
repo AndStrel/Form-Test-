@@ -3,7 +3,7 @@ import { TDrawerState } from 'types/types';
 
 const initialState: TDrawerState = {
   open: false,
-  title: '',
+  isRedacting: false,
   user: undefined,
 };
 
@@ -11,21 +11,23 @@ const drawerSlice = createSlice({
   name: 'drawer',
   initialState,
   reducers: {
-    openDrawer: (state, title) => {
+    openDrawer: (state) => {
       state.open = true;
-      state.title = title.payload;
+    },
+    setIsRedacting: (state, isRedacting) => {
+      state.isRedacting = isRedacting.payload;
     },
     setUser: (state, user) => {
       state.user = user.payload;
     },
     closeDrawer: (state) => {
       state.open = false;
-      state.title = '';
+      state.isRedacting = false;
       state.user = undefined;
     },
   },
 });
 
-export const { openDrawer, setUser, closeDrawer } = drawerSlice.actions;
+export const { openDrawer, setUser, setIsRedacting, closeDrawer } = drawerSlice.actions;
 
 export default drawerSlice.reducer;

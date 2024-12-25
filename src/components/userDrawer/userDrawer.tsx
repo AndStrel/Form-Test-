@@ -10,7 +10,13 @@ interface DrawerProps {
 }
 
 export const UserDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
-  const title = useAppSelector((state: RootState) => state.drawer.title);
+  const IsRedacting = useAppSelector(
+    (state: RootState) => state.drawer.isRedacting,
+  );
+  const user = useAppSelector((state: RootState) => state.drawer.user);
+  const title = IsRedacting
+    ? 'Редактирование пользователя'
+    : 'Добавление пользователя';
 
   return (
     <Drawer
@@ -20,7 +26,7 @@ export const UserDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
       open={open}
       width={500}
     >
-      <UserForm />
+      <UserForm user={user} />
     </Drawer>
   );
 };

@@ -59,6 +59,7 @@ describe('API методы пользователей', () => {
         first_name: 'Иван',
         last_name: 'Круглов',
         avatar: '',
+        birthDate: '',
       };
 
       (reqResApi.get as jest.Mock).mockResolvedValue({ data: { data: mockData } });

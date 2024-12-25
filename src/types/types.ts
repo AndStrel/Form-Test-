@@ -1,21 +1,21 @@
 import { Control, FieldErrors } from 'react-hook-form';
 
-export type TUser = {
+export interface TUser {
   id: number;
   email?: string;
-  first_name?: string;
-  last_name?: string;
+  first_name: string;
+  last_name: string;
   full_name?: string;
   avatar?: string;
   gender?: string;
-  birthDate?: string;
+  birthDate: string;
   role?: string;
-};
+}
 
 export type TFormValues = {
   user: string;
-  gender: 'Мужской' | 'Женский';
-  role: 'Доктор' | 'Медбрат' | 'Медсестра';
+  gender: TGender;
+  role: TRole;
   birthDate: string;
 };
 
@@ -33,9 +33,9 @@ export type TUserSelectUiProps = {
 
 export type TDrawerState = {
   open: boolean;
-  title?: string;
-  user: TUser | undefined;
+  isRedacting: boolean;
+  user?: TUser;
 };
 
-// export type TGender = 'Мужской' | 'Женский' | undefined;
-// export type TRole = 'Доктор' | 'Медбрат' | 'Медсестра' | undefined;
+export type TGender = 'Мужской' | 'Женский';
+export type TRole = 'Доктор' | 'Медбрат' | 'Медсестра';
