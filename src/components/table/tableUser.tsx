@@ -12,17 +12,17 @@ const UserTable: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
 
   // Загрузка данных из localStorage
-  useEffect(() => {
-    const storedUsers = localStorage.getItem('users');
-    if (storedUsers) {
-      dispatch(setUsers(JSON.parse(storedUsers)));
-    }
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const storedUsers = localStorage.getItem('users');
+  //   if (storedUsers) {
+  //     dispatch(setUsers(JSON.parse(storedUsers)));
+  //   }
+  // }, [dispatch]);
 
-  // Сохранение данных в localStorage при изменении users
-  useEffect(() => {
-    localStorage.setItem('users', JSON.stringify(users));
-  }, [users]);
+  // // Сохранение данных в localStorage при изменении users
+  // useEffect(() => {
+  //   localStorage.setItem('users', JSON.stringify(users));
+  // }, [users]);
 
   const handleEdit = (user: TUser) => {
     dispatch(setUser(user));

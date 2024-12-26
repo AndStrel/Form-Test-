@@ -1,10 +1,4 @@
-import {
-  getUsers,
-  getUserById,
-  fullUpdateUser,
-  localupdateUser,
-  deleteUser,
-} from '../utils/api/users';
+import { getUsers, getUserById, createUser, localupdateUser, deleteUser } from '../utils/api/users';
 import reqResApi from '../utils/api/reqResApi';
 import { TUser } from 'types/types';
 
@@ -81,7 +75,7 @@ describe('API методы пользователей', () => {
 
       (reqResApi.put as jest.Mock).mockResolvedValue({ data: mockResponse });
 
-      const result = await fullUpdateUser(1);
+      const result = await createUser(1);
       expect(result).toEqual(mockResponse);
       expect(reqResApi.put).toHaveBeenCalledWith('/users/1');
     });
@@ -89,7 +83,7 @@ describe('API методы пользователей', () => {
     it('должен выбрасывать ошибку, если обновление не удалось', async () => {
       (reqResApi.put as jest.Mock).mockRejectedValue(new Error('Update failed'));
 
-      await expect(fullUpdateUser(1)).rejects.toThrow('Update failed');
+      await expect(createUser(1)).rejects.toThrow('Update failed');
     });
   });
 

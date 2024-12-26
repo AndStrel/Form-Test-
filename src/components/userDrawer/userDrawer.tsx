@@ -30,7 +30,6 @@ export const UserDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
   const title = isRedacting
     ? 'Редактирование пользователя'
     : 'Добавление пользователя';
-  console.log(userFromState);
   return (
     <Drawer
       title={title}
