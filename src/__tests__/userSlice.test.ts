@@ -3,7 +3,6 @@ import usersReducer, {
   setPage,
   setHasMore,
   setUsers,
-  // appendUsers,
   addUserServer,
   addUser,
   updateUser,

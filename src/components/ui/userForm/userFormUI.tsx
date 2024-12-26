@@ -18,15 +18,7 @@ export const UserFormUI: React.FC<UserFormUIProps> = ({
       required
       help={errors.user && <Text type="danger">{errors.user.message}</Text>}
     >
-      <UserSelect
-        control={control}
-        errors={errors}
-        addedUsers={
-          [
-            /* IDs уже добавленных пользователей */
-          ]
-        }
-      />
+      <UserSelect control={control} errors={errors} />
     </Form.Item>
 
     <Form.Item

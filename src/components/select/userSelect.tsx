@@ -1,10 +1,10 @@
-import { Form, Modal, Select, Spin, Typography } from 'antd';
+import { Modal, Select, Spin } from 'antd';
 import { Controller } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { getUsers } from '@utils/api/users';
 import { TUser, TUserSelectUiProps } from 'types/types';
 import debounce from 'lodash/debounce';
-import { useAppDispatch, useAppSelector } from '@utils/store';
+import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
 import { AddUserForm } from '@components/addUserForm/addUserForm';
 import { setUser } from '@utils/slices/drawerSlice';
 import { addUserServer } from '@utils/slices/usersSlice';
@@ -13,7 +13,6 @@ const { Option } = Select;
 
 export const UserSelect: React.FC<TUserSelectUiProps> = ({
   control,
-  addedUsers,
   errors,
 }) => {
   const [users, setUsers] = useState<TUser[]>([]);
@@ -23,6 +22,12 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
   const [searchName, setSearchName] = useState('');
 
   const dispatch = useAppDispatch();
+  const isRedacting = useAppSelector(
+    (state: RootState) => state.drawer.isRedacting,
+  );
+  const addedUsers = useAppSelector((state: RootState) =>
+    state.users.users.map((user) => user.id),
+  );
 
   // Получение пользователей (с пагинацией и фильтром)
   const fetchUsers = async (page: number, search = '') => {
@@ -55,7 +60,7 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
   // Пагинация при прокрутке
   const handleScroll = (e: React.UIEvent<HTMLElement, UIEvent>) => {
     const target = e.target as HTMLElement;
-    // Проверяем, что скроллим в контейнере списка (dropdown)
+
     if (loading || !hasMore) return;
 
     if (target.scrollTop + target.clientHeight >= target.scrollHeight - 50) {
@@ -83,6 +88,7 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
       <Controller
         name="user"
         control={control}
+        disabled={isRedacting}
         defaultValue={undefined}
         render={({ field }) => (
           <Select
@@ -99,7 +105,6 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
               );
               if (selectedUser) {
                 dispatch(setUser(selectedUser));
-                // Запись в Redux
               }
               field.onChange(value);
             }}

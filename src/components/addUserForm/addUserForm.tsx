@@ -2,36 +2,16 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Form, Input, Space, Upload, Modal } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { TUser } from 'types/types';
+import { TUser, FormModalData } from 'types/types';
 import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
 import { closeDrawer } from '@utils/slices/drawerSlice';
-import * as yup from 'yup';
 import { createUser } from '@utils/api/users';
 import { addUser } from '@utils/slices/usersSlice';
-
-interface FormData {
-  first_name: string;
-  last_name: string;
-  email: string;
-  avatar?: File;
-}
+import { validationSchemaModal } from '@utils/validation/validationShemaModal';
 
 interface AddUserFormProps {
   isModal: (sate: boolean) => void;
 }
-
-const validationSchema = yup.object().shape({
-  first_name: yup.string().required('Введите имя'),
-  last_name: yup.string().required('Введите фамилию'),
-  email: yup.string().email('Некорректный email').required('Введите email'),
-  avatar: yup
-    .mixed<File>()
-    .test(
-      'fileSize',
-      'Размер файла должен быть меньше 2 МБ',
-      (value) => !value || value.size <= 2 * 1024 * 1024,
-    ),
-});
 
 export const AddUserForm: React.FC<AddUserFormProps> = ({ isModal }) => {
   const dispatch = useAppDispatch();
@@ -42,8 +22,8 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({ isModal }) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FormData>({
-    resolver: yupResolver(validationSchema),
+  } = useForm<FormModalData>({
+    resolver: yupResolver(validationSchemaModal),
     defaultValues: {
       email: '',
       first_name: '',
@@ -52,8 +32,7 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({ isModal }) => {
     },
   });
 
-  const handleFormSubmit = async (data: FormData) => {
-    // Преобразуем FormData в TUser
+  const handleFormSubmit = async (data: FormModalData) => {
     const newUser: Partial<TUser> = {
       id: Date.now(),
       first_name: data.first_name,
@@ -62,11 +41,9 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({ isModal }) => {
       email: data.email,
       avatar: data.avatar ? URL.createObjectURL(data.avatar) : '',
     };
-    console.log(newUser);
     dispatch(addUser(newUser as TUser));
     createUser(newUser.id as number);
-    // addUser(newUser as TUser);
-    reset(); // Сброс формы
+    reset();
     dispatch(closeDrawer());
     isModal(false);
 
@@ -75,7 +52,7 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({ isModal }) => {
       onOk: () => {},
     });
   };
-  console.log(users);
+
   return (
     <Form layout="vertical" onFinish={handleSubmit(handleFormSubmit)}>
       <Form.Item

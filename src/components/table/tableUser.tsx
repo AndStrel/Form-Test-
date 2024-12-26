@@ -13,10 +13,11 @@ const UserTable: React.FC = () => {
 
   // Загрузка данных из localStorage
   // useEffect(() => {
-  //   const storedUsers = localStorage.getItem('users');
-  //   if (storedUsers) {
-  //     dispatch(setUsers(JSON.parse(storedUsers)));
-  //   }
+  // const storedUsers = localStorage.getItem('users');
+  // if (storedUsers) {
+  //   dispatch(setUsers(JSON.parse(storedUsers)));
+  // }
+  // console.log();
   // }, [dispatch]);
 
   // // Сохранение данных в localStorage при изменении users
@@ -128,7 +129,10 @@ const UserTable: React.FC = () => {
         style={{ marginBottom: 16 }}
       />
       <Table
-        dataSource={filteredUsers.map((user) => ({ ...user, key: user.id }))}
+        dataSource={filteredUsers.map((user) => ({
+          ...user,
+          key: `${Date.now()}-${user.id}`, // Генерируем уникальный ключ
+        }))}
         columns={columns}
         pagination={false}
       />
