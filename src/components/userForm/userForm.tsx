@@ -44,26 +44,29 @@ export const UserForm: React.FC<UserFormProps> = ({ user }) => {
 
   // Сброс значений формы при изменении user
   useEffect(() => {
-    if (user) {
-      reset(
-        user
-          ? {
-              user: user.full_name,
-              gender:
-                user.gender === 'Мужской' || user.gender === 'Женский'
-                  ? user.gender
-                  : undefined,
-              role:
-                user.role === 'Доктор' ||
-                user.role === 'Медбрат' ||
-                user.role === 'Медсестра'
-                  ? user.role
-                  : undefined,
-              birthDate: user.birthDate,
-            }
-          : undefined,
-      );
-    }
+    reset(
+      user
+        ? {
+            user: user.full_name,
+            gender:
+              user.gender === 'Мужской' || user.gender === 'Женский'
+                ? user.gender
+                : undefined,
+            role:
+              user.role === 'Доктор' ||
+              user.role === 'Медбрат' ||
+              user.role === 'Медсестра'
+                ? user.role
+                : undefined,
+            birthDate: user.birthDate,
+          }
+        : {
+            user: undefined,
+            gender: undefined,
+            role: undefined,
+            birthDate: '',
+          }, // Сбрасываем на пустые значения
+    );
   }, [user, reset]);
 
   const gender = watch('gender'); // Отслеживаем значение поля "Пол"
