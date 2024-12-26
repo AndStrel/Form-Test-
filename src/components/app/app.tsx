@@ -17,10 +17,10 @@ export const App: React.FC = () => {
   const handleDrawerClose = () => {
     dispatch(closeDrawer());
   };
-
-  useEffect(() => {
-    dispatch(setUsers(startUsers));
-  }, [dispatch]);
+  // dispatch(setUsers(startUsers));
+  // useEffect(() => {
+  //   dispatch(setUsers(startUsers));
+  // }, [dispatch]);
 
   return (
     <Router>
