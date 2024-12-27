@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { update } from 'lodash';
 import { TUser } from 'types/types';
 
 interface UsersState {
@@ -33,28 +32,21 @@ const usersSlice = createSlice({
     },
     setUsers: (state, action: PayloadAction<TUser[]>) => {
       state.users = action.payload;
+      localStorage.setItem('users', JSON.stringify(state.users));
     },
-    // appendUsers: (state, action: PayloadAction<Partial<TUser>>) => {
-    //   // Проверяем, существует ли пользователь с таким id
-    //   const userExists = state.usersServer.some((user) => user.id === action.payload.id);
-
-    //   if (!userExists) {
-    //     // Добавляем нового пользователя, если его еще нет в списке
-    //     state.usersServer.push(action.payload as TUser);
-    //   }
-    // },
     addUserServer: (state, action: PayloadAction<TUser[]>) => {
-      // Фильтруем новых пользователей, исключая тех, чьи id уже есть в state
       const filteredUsers = action.payload.filter(
         (user) => !state.usersServer.some((existingUser) => existingUser.id === user.id),
       );
-
-      // Добавляем только новых пользователей в state
       state.usersServer.push(...filteredUsers);
+      localStorage.setItem('users', JSON.stringify(state.users));
     },
 
     addUser: (state, action: PayloadAction<TUser>) => {
-      state.users.push(action.payload);
+      const existingUser = state.users.find((user) => user.id === action.payload.id);
+      if (!existingUser) {
+        state.users.push(action.payload);
+      }
     },
     updateUser: (state, action: PayloadAction<TUser>) => {
       const index = state.users.findIndex((user) => user.id === action.payload.id);
@@ -63,6 +55,11 @@ const usersSlice = createSlice({
       } else {
         state.users.push(action.payload);
       }
+      localStorage.setItem('users', JSON.stringify(state.users));
+    },
+    deleteUserInState: (state, action: PayloadAction<number>) => {
+      state.users = state.users.filter((user) => user.id !== action.payload);
+      localStorage.setItem('users', JSON.stringify(state.users));
     },
   },
 });
@@ -73,9 +70,9 @@ export const {
   setHasMore,
   setUsers,
   addUserServer,
-  // appendUsers,
   addUser,
   updateUser,
+  deleteUserInState,
 } = usersSlice.actions;
 
 export default usersSlice.reducer;

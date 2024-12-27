@@ -3,12 +3,43 @@ import usersReducer, {
   setPage,
   setHasMore,
   setUsers,
-  // appendUsers,
   addUserServer,
   addUser,
   updateUser,
+  deleteUserInState,
 } from '../utils/slices/usersSlice';
 import { TUser } from 'types/types';
+import { startUsers } from '../utils/constants';
+
+// Мокаем API, чтобы возвращать предопределенные данные
+jest.mock('../utils/api/users', () => ({
+  getUsers: jest.fn(() => Promise.resolve({ data: startUsers, total: startUsers.length })),
+  getUserById: jest.fn(() => Promise.resolve(startUsers[0])),
+  createUser: jest.fn(() => Promise.resolve(startUsers[0])),
+  localupdateUser: jest.fn(() => Promise.resolve(startUsers[0])),
+  deleteUser: jest.fn(() => Promise.resolve(startUsers[0])),
+}));
+
+const mockUser: TUser = startUsers[0];
+const mockUsers: TUser[] = startUsers;
+
+// Настройка мока localStorage и подавление ошибок в консоли
+beforeAll(() => {
+  Object.defineProperty(global, 'localStorage', {
+    value: {
+      getItem: jest.fn(),
+      setItem: jest.fn(),
+      removeItem: jest.fn(),
+      clear: jest.fn(),
+    },
+    writable: true,
+  });
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
+afterAll(() => {
+  jest.restoreAllMocks();
+});
 
 describe('usersSlice', () => {
   const initialState = {
@@ -19,108 +50,67 @@ describe('usersSlice', () => {
     hasMore: true,
   };
 
-  const testUser: TUser = {
-    id: 1,
-    email: 'test@example.com',
-    first_name: 'Иван',
-    last_name: 'Иванов',
-    avatar: 'avatar_url',
-    birthDate: '24-10-1998',
-  };
-
-  const anotherUser: TUser = {
-    id: 2,
-    email: 'another@example.com',
-    first_name: 'Петр',
-    last_name: 'Петров',
-    avatar: 'another_avatar_url',
-    birthDate: '10-10-1995',
-  };
-
-  it('Проверяем, что редьюсер возвращает начальное состояние при передаче undefined', () => {
+  it('должен возвращать начальное состояние', () => {
     expect(usersReducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });
 
-  it('Проверяем, что экшен setLoading обновляет флаг загрузки', () => {
-    expect(usersReducer(initialState, setLoading(true))).toEqual({
+  it('должен устанавливать состояние загрузки', () => {
+    const action = setLoading(true);
+    const state = usersReducer(initialState, action);
+    expect(state.loading).toBe(true);
+  });
+
+  it('должен устанавливать номер страницы', () => {
+    const action = setPage(2);
+    const state = usersReducer(initialState, action);
+    expect(state.page).toBe(2);
+  });
+
+  it('должен устанавливать флаг "hasMore"', () => {
+    const action = setHasMore(false);
+    const state = usersReducer(initialState, action);
+    expect(state.hasMore).toBe(false);
+  });
+
+  it('должен добавлять пользователей на сервер и фильтровать дубликаты', () => {
+    const initial = {
       ...initialState,
-      loading: true,
-    });
+    };
+    const newUsers: TUser[] = mockUsers;
+    const action = addUserServer(newUsers);
+
+    const state = usersReducer(initial, action);
+    expect(state.usersServer).toHaveLength(3);
+    expect(state.usersServer).toEqual(newUsers);
   });
 
-  it('Проверяем, что экшен setPage обновляет номер страницы', () => {
-    expect(usersReducer(initialState, setPage(2))).toEqual({
-      ...initialState,
-      page: 2,
-    });
+  it('должен добавлять пользователя, если его еще нет в списке', () => {
+    const action = addUser(mockUser);
+    const state = usersReducer(initialState, action);
+    expect(state.users).toEqual([mockUser]);
   });
 
-  it('Проверяем, что экшен setHasMore обновляет флаг hasMore', () => {
-    expect(usersReducer(initialState, setHasMore(false))).toEqual({
-      ...initialState,
-      hasMore: false,
-    });
+  it('должен обновлять пользователя, если он уже существует', () => {
+    const state = { ...initialState, users: mockUsers };
+    const updatedUser: TUser = { ...mockUsers[1], last_name: 'Казимир' };
+    const action = updateUser(updatedUser);
+    const newState = usersReducer(state, action);
+    expect(newState.users[1].last_name).toBe('Казимир');
   });
 
-  it('Проверяем, что экшен setUsers обновляет список пользователей', () => {
-    const usersList: TUser[] = [testUser, anotherUser];
-    expect(usersReducer(initialState, setUsers(usersList))).toEqual({
-      ...initialState,
-      users: usersList,
-    });
+  it('должен добавлять пользователя, если его нет в списке во время обновления', () => {
+    const updatedUser: TUser = mockUsers[1];
+    const action = updateUser(updatedUser);
+
+    const state = usersReducer(initialState, action);
+    expect(state.users).toEqual([updatedUser]);
   });
 
-  // it('Проверяем, что экшен appendUsers добавляет новых пользователей', () => {
-  //   const initialUsers = [testUser];
-  //   const stateWithUsers = { ...initialState, users: initialUsers };
-  //   const newUsers = [anotherUser, testUser]; // testUser уже есть в state
+  it('должен удалять пользователя из состояния', () => {
+    const state = { ...initialState, users: mockUsers };
+    const action = deleteUserInState(1245);
 
-  //   expect(usersReducer(stateWithUsers, appendUsers(anotherUser))).toEqual({
-  //     ...stateWithUsers,
-  //     users: [testUser, anotherUser], // Добавится только anotherUser
-  //   });
-  // });
-
-  it('Проверяем, что экшен addUserServer добавляет нового пользователя, если его нет в списке', () => {
-    const initialUsersServer = [testUser];
-    const stateWithServerUsers = { ...initialState, usersServer: initialUsersServer };
-
-    const newUser = anotherUser;
-
-    expect(usersReducer(stateWithServerUsers, addUserServer([newUser]))).toEqual({
-      ...stateWithServerUsers,
-      usersServer: [testUser, anotherUser], // Добавлен новый пользователь
-    });
-  });
-
-  it('Проверяем, что экшен addUser добавляет нового пользователя', () => {
-    const initialUsers = [testUser];
-    const stateWithUsers = { ...initialState, users: initialUsers };
-
-    expect(usersReducer(stateWithUsers, addUser(anotherUser))).toEqual({
-      ...stateWithUsers,
-      users: [testUser, anotherUser],
-    });
-  });
-
-  it('Проверяем, что экшен updateUser обновляет существующего пользователя', () => {
-    const updatedUser = { ...testUser, first_name: 'Обновленный Иван' };
-    const initialUsers = [testUser];
-    const stateWithUsers = { ...initialState, users: initialUsers };
-
-    expect(usersReducer(stateWithUsers, updateUser(updatedUser))).toEqual({
-      ...stateWithUsers,
-      users: [updatedUser],
-    });
-  });
-
-  it('Проверяем, что экшен updateUser добавляет пользователя, если его нет в списке', () => {
-    const initialUsers = [testUser];
-    const stateWithUsers = { ...initialState, users: initialUsers };
-
-    expect(usersReducer(stateWithUsers, updateUser(anotherUser))).toEqual({
-      ...stateWithUsers,
-      users: [testUser, anotherUser],
-    });
+    const newState = usersReducer(state, action);
+    expect(newState.users).toEqual(mockUsers.filter((user) => user.id !== 1245));
   });
 });

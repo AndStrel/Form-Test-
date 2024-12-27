@@ -1,6 +1,8 @@
-export const startUsers = [
+import { TUser } from 'types/types';
+
+export const startUsers: TUser[] = [
   {
-    id: 1,
+    id: 1245,
     avatar: 'https://i.pravatar.cc/50',
     first_name: 'Антонина',
     last_name: 'Казимир',
@@ -11,7 +13,7 @@ export const startUsers = [
     role: 'Медсестра',
   },
   {
-    id: 2,
+    id: 412341,
     email: 'newuser@mail.ru',
     first_name: 'Варфоломей',
     last_name: 'Иванов',
@@ -22,7 +24,7 @@ export const startUsers = [
     role: 'Доктор',
   },
   {
-    id: 3,
+    id: 63244,
     avatar: 'https://i.pravatar.cc/40',
     first_name: 'Иван',
     last_name: 'Петров',

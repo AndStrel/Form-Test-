@@ -3,6 +3,12 @@ import reqResApi from '../utils/api/reqResApi';
 import { TUser } from 'types/types';
 
 jest.mock('../utils/api/reqResApi'); // Мокаем Axios-инстанс
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterAll(() => {
+  jest.restoreAllMocks();
+});
 
 describe('API методы пользователей', () => {
   afterEach(() => {

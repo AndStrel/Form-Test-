@@ -1,16 +1,15 @@
 /* eslint-disable indent */
-import { useForm, useFormContext } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import validationSchema from '@utils/validation/validationShema'; // Импортируем схему валидации
 import { UserFormUI } from '@ui/userForm/userFormUI';
 import { TFormValues, TUser } from 'types/types';
 import { Button, Form, Modal, Space } from 'antd';
 import { useEffect } from 'react';
-import { localupdateUser } from '@utils/api/users';
-import { useAppDispatch, useAppSelector } from '@utils/store';
+import { createUser, localupdateUser } from '@utils/api/users';
+import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
 import { closeDrawer } from '@utils/slices/drawerSlice';
 import { addUser, updateUser } from '@utils/slices/usersSlice';
-import _, { update } from 'lodash';
 
 interface UserFormProps {
   user?: TUser;
@@ -18,6 +17,7 @@ interface UserFormProps {
 
 export const UserForm: React.FC<UserFormProps> = ({ user }) => {
   const dispatch = useAppDispatch();
+  const users = useAppSelector((state: RootState) => state.users.users);
   const {
     control,
     handleSubmit,
@@ -72,15 +72,34 @@ export const UserForm: React.FC<UserFormProps> = ({ user }) => {
   }, [user, reset]);
 
   const gender = watch('gender'); // Отслеживаем значение поля "Пол"
-  // Обработчик отправки формы
+
   const _user = useAppSelector((state) => state.drawer.user);
   const task = useAppSelector((state) => state.drawer.isRedacting);
+  const findUserById = (userId: number) =>
+    users.find((user) => user.id === userId);
 
-  const handleAction = (user: TUser) => {
+  const handleActionUser = (user: TUser) => {
+    const existingUser = findUserById(user.id);
     if (task) {
       dispatch(updateUser(user));
+      localupdateUser(user.id as number);
+      Modal.success({
+        title: `Пользователь ${user.first_name} ${user.last_name} успешно обновлен`,
+        onOk: () => {},
+      });
+    } else if (existingUser) {
+      Modal.error({
+        title: `Такой пользователь уже существует`,
+        onOk: () => {},
+      });
+      return;
     } else {
       dispatch(addUser(user));
+      createUser(user.id);
+      Modal.success({
+        title: `Пользователь ${user.first_name} ${user.last_name} успешно создан`,
+        onOk: () => {},
+      });
     }
   };
   const handleFormSubmit = async (data: TFormValues) => {
@@ -96,19 +115,16 @@ export const UserForm: React.FC<UserFormProps> = ({ user }) => {
       birthDate: data.birthDate,
       avatar: _user?.avatar,
     };
-    // dispatch(addUser(newUser as TUser));
-    handleAction(newUser as TUser);
 
-    localupdateUser(newUser.id as number);
+    handleActionUser(newUser as TUser);
     reset();
     dispatch(closeDrawer());
-    Modal.success({
-      title: `Успешно 👍`,
-      onOk: () => {},
-    });
   };
-  const usersState = useAppSelector((state) => state.users);
-  console.log(usersState);
+
+  useEffect(() => {
+    localStorage.setItem('users', JSON.stringify(users));
+  }, [users]);
+
   return (
     <Form layout="vertical" onFinish={handleSubmit(handleFormSubmit)}>
       <UserFormUI control={control} errors={errors} gender={gender} />
