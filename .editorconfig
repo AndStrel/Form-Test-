@@ -1,0 +1,19 @@
+root = true
+
+[*]
+indent_style = space          # Используем пробелы для отступов
+indent_size = 2               # Размер отступа - 2 пробела
+end_of_line = lf              # Используем LF (Unix-style) для окончания строк
+charset = utf-8               # Кодировка файла
+trim_trailing_whitespace = true  # Удаляем лишние пробелы в конце строки
+insert_final_newline = true   # Всегда добавляем пустую строку в конце файла
+
+[*.js]
+max_line_length = 80         # Максимальная длина строки - 80 символов
+
+[*.ts]
+max_line_length = 100        
+
+[*.{json,md}]
+indent_style = space
+indent_size = 2
