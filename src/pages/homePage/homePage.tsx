@@ -3,6 +3,10 @@ import { openDrawer, setIsRedacting, setUser } from '@utils/slices/drawerSlice';
 import { useAppDispatch } from '@utils/store';
 
 import { Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+
+import styles from '@styles/components/button.module.scss';
+import clsx from 'clsx';
 
 export const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -14,7 +18,12 @@ export const HomePage: React.FC = () => {
 
   return (
     <>
-      <Button type="primary" onClick={() => createUser()}>
+      <Button
+        type="primary"
+        className={clsx(styles.button__secondary)} // Модификаторы styles.button__secondary}
+        icon={<PlusOutlined />}
+        onClick={() => createUser()}
+      >
         Создать нового пользователя
       </Button>
       <UserTable />
