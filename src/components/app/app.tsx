@@ -36,8 +36,6 @@ export const App: React.FC = () => {
     dispatch(setLoading(false));
   }, [dispatch]);
 
-  console.log(loadUsersFromLocalStorage());
-
   const handleDrawerClose = () => {
     dispatch(closeDrawer());
   };

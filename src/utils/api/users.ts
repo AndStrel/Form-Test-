@@ -29,7 +29,7 @@ export const createUser = async (id: number) => {
     const response = await reqResApi.put(`/users/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Ошибка при редактировании пользователя:', error);
+    console.error('Ошибка при добавлении пользователя:', error);
     throw error;
   }
 };

@@ -6,7 +6,7 @@ import { UserFormUI } from '@ui/userForm/userFormUI';
 import { TFormValues, TUser } from 'types/types';
 import { Button, Form, Modal, Space } from 'antd';
 import { useEffect } from 'react';
-import { localupdateUser } from '@utils/api/users';
+import { createUser, localupdateUser } from '@utils/api/users';
 import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
 import { closeDrawer } from '@utils/slices/drawerSlice';
 import { addUser, updateUser } from '@utils/slices/usersSlice';
@@ -95,6 +95,7 @@ export const UserForm: React.FC<UserFormProps> = ({ user }) => {
       return;
     } else {
       dispatch(addUser(user));
+      createUser(user.id);
       Modal.success({
         title: `Пользователь ${user.first_name} ${user.last_name} успешно создан`,
         onOk: () => {},
