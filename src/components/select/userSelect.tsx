@@ -38,7 +38,12 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
           !addedUsers.includes(user.id) &&
           user.last_name?.toLowerCase().includes(search.toLowerCase()),
       );
-      setUsers((prev) => [...prev, ...filteredUsers]);
+      setUsers((prev) => {
+        const uniqueUsers = [...prev, ...filteredUsers].filter(
+          (v, i, a) => a.findIndex((t) => t.id === v.id) === i, // Убираем дубли
+        );
+        return page === 1 ? filteredUsers : uniqueUsers;
+      });
       dispatch(addUserServer(data));
       setHasMore(page * 8 < total); // Проверяем, есть ли еще данные
     } catch (error) {
@@ -57,14 +62,15 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
   }, 300);
 
   // Пагинация при прокрутке
-  const handleScroll = (e: React.UIEvent<HTMLElement, UIEvent>) => {
-    const target = e.target as HTMLElement;
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement;
 
     if (loading || !hasMore) return;
 
+    // Проверяем, достиг ли пользователь конца списка
     if (target.scrollTop + target.clientHeight >= target.scrollHeight - 50) {
-      // 50px для буфера
-      setPage((prev) => prev + 1); // Загружаем следующую страницу
+      setPage((prev) => prev + 1);
+      fetchUsers(page + 1, searchName);
     }
   };
 
@@ -79,8 +85,15 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
   };
 
   useEffect(() => {
-    fetchUsers(page);
+    if (page > 1) {
+      fetchUsers(page, searchName);
+    }
   }, [page]);
+
+  useEffect(() => {
+    setUsers([]); // Обнуляем пользователей при обновлении addedUsers
+    fetchUsers(1, searchName);
+  }, [addedUsers]);
 
   return (
     <>
@@ -90,54 +103,65 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
         disabled={isRedacting}
         defaultValue={undefined}
         render={({ field }) => (
-          <Select
-            {...field}
-            showSearch
-            placeholder="Выберите пользователя"
-            notFoundContent={loading ? <Spin size="small" /> : 'Не найдено'}
-            filterOption={false}
-            onSearch={handleSearch}
-            onPopupScroll={handleScroll}
-            onChange={(value) => {
-              const selectedUser = users.find(
-                (user) => user.id === Number(value),
-              );
-              if (selectedUser) {
-                dispatch(setUser(selectedUser));
-              }
-              field.onChange(value);
-            }}
-            dropdownRender={(menu) => (
-              <>
-                {menu}
-                {!users.find((user) => user.last_name !== searchName) && (
+          <Controller
+            name="user"
+            control={control}
+            disabled={isRedacting}
+            defaultValue={undefined}
+            render={({ field }) => (
+              <Select
+                {...field}
+                showSearch
+                placeholder="Выберите пользователя"
+                notFoundContent={loading ? <Spin size="small" /> : 'Не найдено'}
+                filterOption={false}
+                dropdownRender={(menu) => (
                   <div
+                    onScroll={handleScroll} // Скролл внутри выпадающего списка
                     style={{
-                      padding: '8px',
-                      textAlign: 'center',
-                      cursor: 'pointer',
-                      color: '#1890ff',
-                    }}
-                    onClick={() => {
-                      showModal();
+                      maxHeight: '150px', // Ограничиваем высоту
+                      overflowY: 'auto', // Добавляем скролл только здесь
                     }}
                   >
-                    Добавить пользователя
+                    {menu}
+                    {!users.find((user) => user.last_name !== searchName) && (
+                      <div
+                        style={{
+                          padding: '8px',
+                          textAlign: 'center',
+                          cursor: 'pointer',
+                          color: '#1890ff',
+                        }}
+                        onClick={showModal}
+                      >
+                        Добавить пользователя
+                      </div>
+                    )}
                   </div>
                 )}
-              </>
-            )}
-          >
-            {users.map((user, index) => (
-              <Option
-                key={`${user.id}-${index}`} // Уникальный ключ
-                value={user.id}
-                disabled={addedUsers.includes(user.id)}
+                onSearch={handleSearch}
+                onChange={(value) => {
+                  const selectedUser = users.find(
+                    (user) => user.id === Number(value),
+                  );
+                  if (selectedUser) {
+                    dispatch(setUser(selectedUser));
+                  }
+                  field.onChange(value);
+                }}
               >
-                {`${user.first_name} ${user.last_name}`}
-              </Option>
-            ))}
-          </Select>
+                {users.map((user) => (
+                  <Option
+                    key={user.id} // Уникальный ключ
+                    value={user.id}
+                    disabled={addedUsers.includes(user.id)}
+                  >
+                    {`${user.first_name} ${user.last_name}`}
+                  </Option>
+                ))}
+              </Select>
+            )}
+          />
         )}
       />
       <Modal
