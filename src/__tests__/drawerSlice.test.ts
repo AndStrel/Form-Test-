@@ -9,8 +9,6 @@ describe('drawerSlice', () => {
   };
 
   it('должен возвращать первоначальное состояние', () => {
-    // const state = drawerReducer(undefined, { type: undefined });
-    // expect(state).toEqual(initialState);
     expect(drawerReducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });
 
