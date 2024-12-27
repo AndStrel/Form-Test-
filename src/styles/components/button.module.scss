@@ -4,7 +4,7 @@
   background-color: $primary-color; // Используем переменные из variables.scss
   color: #fff;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 16px;
   border: none;
   cursor: pointer;
 
@@ -20,9 +20,11 @@
 
   &__secondary {
     background-color: $secondary-color;
-  }
+    margin-bottom: 10px;
+    margin-top: 10px;
 
-  &:hover {
-    opacity: 0.9;
+    &:hover {
+      opacity: 0.9;
+    }
   }
 }

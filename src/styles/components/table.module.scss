@@ -1,0 +1,13 @@
+.custom-table {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+
+.custom-row {
+  font-size: 14px;
+  line-height: 20px;
+  &:hover {
+    background-color: #f9f9f9;
+  }
+}
