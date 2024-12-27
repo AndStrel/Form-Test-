@@ -8,6 +8,7 @@ import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
 import { AddUserForm } from '@components/addUserForm/addUserForm';
 import { setUser } from '@utils/slices/drawerSlice';
 import { addUserServer } from '@utils/slices/usersSlice';
+import { addedUsersSelector } from '@utils/selectors/addedUsersSelector';
 
 const { Option } = Select;
 
@@ -22,11 +23,9 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
   const [searchName, setSearchName] = useState('');
 
   const dispatch = useAppDispatch();
+  const addedUsers = useAppSelector(addedUsersSelector);
   const isRedacting = useAppSelector(
     (state: RootState) => state.drawer.isRedacting,
-  );
-  const addedUsers = useAppSelector((state: RootState) =>
-    state.users.users.map((user) => user.id),
   );
 
   // Получение пользователей (с пагинацией и фильтром)

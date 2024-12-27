@@ -1,29 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Table, Button, Modal, message, Input } from 'antd';
 import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
 import { openDrawer, setUser, setIsRedacting } from '@utils/slices/drawerSlice';
 import { deleteUser } from '@utils/api/users';
-import { setLoading, setUsers } from '@utils/slices/usersSlice';
+import { deleteUserInState } from '@utils/slices/usersSlice';
 import { TUser } from 'types/types';
 
 const UserTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const users = useAppSelector((state: RootState) => state.users.users);
   const [searchValue, setSearchValue] = useState('');
-
-  // Загрузка данных из localStorage
-  // useEffect(() => {
-  // const storedUsers = localStorage.getItem('users');
-  // if (storedUsers) {
-  //   dispatch(setUsers(JSON.parse(storedUsers)));
-  // }
-  // console.log();
-  // }, [dispatch]);
-
-  // // Сохранение данных в localStorage при изменении users
-  // useEffect(() => {
-  //   localStorage.setItem('users', JSON.stringify(users));
-  // }, [users]);
 
   const handleEdit = (user: TUser) => {
     dispatch(setUser(user));
@@ -35,9 +21,7 @@ const UserTable: React.FC = () => {
     deleteUser(userId)
       .then(() => {
         message.success('Пользователь успешно удален');
-        // Обновление списка пользователей
-        const updatedUsers = users.filter((user) => user.id !== userId);
-        dispatch(setUsers(updatedUsers));
+        dispatch(deleteUserInState(userId));
       })
       .catch((error) => {
         console.error('Ошибка при удалении пользователя:', error);
@@ -131,7 +115,7 @@ const UserTable: React.FC = () => {
       <Table
         dataSource={filteredUsers.map((user) => ({
           ...user,
-          key: `${Date.now()}-${user.id}`, // Генерируем уникальный ключ
+          key: user.id, // Генерируем уникальный ключ
         }))}
         columns={columns}
         pagination={false}

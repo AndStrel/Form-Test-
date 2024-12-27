@@ -4,46 +4,47 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { UserDrawer } from '@components/userDrawer/userDrawer';
 import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
 import { closeDrawer } from '@utils/slices/drawerSlice';
-import { setUsers } from '@utils/slices/usersSlice';
+import { setLoading, setUsers } from '@utils/slices/usersSlice';
 
 import { useEffect } from 'react';
-import { start } from 'repl';
 import { startUsers } from '@utils/constants';
 import { TUser } from 'types/types';
 
 export const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const isDrawerOpen = useAppSelector((state: RootState) => state.drawer.open);
-  const users = useAppSelector((state: RootState) => state.users.users);
+  const loading = useAppSelector((state: RootState) => state.users.loading);
 
-  // Загрузка данных из localStorage
-  const readStoredUsers = () => {
+  // Чтение пользователей из localStorage
+  const loadUsersFromLocalStorage = (): TUser[] => {
     const storedUsers = localStorage.getItem('users');
-    if (storedUsers === null) {
-      return undefined;
+    if (storedUsers) {
+      try {
+        return JSON.parse(storedUsers);
+      } catch {
+        console.error('Ошибка при парсинге пользователей из localStorage');
+        localStorage.removeItem('users'); // Удаляем некорректные данные
+      }
     }
-    try {
-      return JSON.parse(storedUsers);
-    } catch (e) {
-      localStorage.removeItem('user');
-      return undefined;
-    }
+    return startUsers; // Если данных нет, возвращаем шаблонных
   };
 
-  if (readStoredUsers().length === 0) {
-    dispatch(setUsers(startUsers));
-  } else {
-    // dispatch(setUsers(readStoredUsers()));
-  }
-  console.log(readStoredUsers());
-  // dispatch(setUsers(startUsers));
-  // useEffect(() => {
-  //   localStorage.setItem('users', JSON.stringify(users));
-  // }, [users, dispatch]);
+  useEffect(() => {
+    dispatch(setLoading(true));
+    const users = loadUsersFromLocalStorage();
+    dispatch(setUsers(users));
+    dispatch(setLoading(false));
+  }, [dispatch]);
+
+  console.log(loadUsersFromLocalStorage());
 
   const handleDrawerClose = () => {
     dispatch(closeDrawer());
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Router>
@@ -54,5 +55,3 @@ export const App: React.FC = () => {
     </Router>
   );
 };
-
-export default App;

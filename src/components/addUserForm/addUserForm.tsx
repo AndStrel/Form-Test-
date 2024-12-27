@@ -8,6 +8,7 @@ import { closeDrawer } from '@utils/slices/drawerSlice';
 import { createUser } from '@utils/api/users';
 import { addUser } from '@utils/slices/usersSlice';
 import { validationSchemaModal } from '@utils/validation/validationShemaModal';
+import { useEffect } from 'react';
 
 interface AddUserFormProps {
   isModal: (sate: boolean) => void;
@@ -52,6 +53,10 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({ isModal }) => {
       onOk: () => {},
     });
   };
+
+  useEffect(() => {
+    localStorage.setItem('users', JSON.stringify(users));
+  }, [users]);
 
   return (
     <Form layout="vertical" onFinish={handleSubmit(handleFormSubmit)}>

@@ -7,7 +7,7 @@ import { TFormValues, TUser } from 'types/types';
 import { Button, Form, Modal, Space } from 'antd';
 import { useEffect } from 'react';
 import { localupdateUser } from '@utils/api/users';
-import { useAppDispatch, useAppSelector } from '@utils/store';
+import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
 import { closeDrawer } from '@utils/slices/drawerSlice';
 import { addUser, updateUser } from '@utils/slices/usersSlice';
 
@@ -17,6 +17,7 @@ interface UserFormProps {
 
 export const UserForm: React.FC<UserFormProps> = ({ user }) => {
   const dispatch = useAppDispatch();
+  const users = useAppSelector((state: RootState) => state.users.users);
   const {
     control,
     handleSubmit,
@@ -74,8 +75,6 @@ export const UserForm: React.FC<UserFormProps> = ({ user }) => {
 
   const _user = useAppSelector((state) => state.drawer.user);
   const task = useAppSelector((state) => state.drawer.isRedacting);
-  const users = useAppSelector((state) => state.users.users);
-
   const findUserById = (userId: number) =>
     users.find((user) => user.id === userId);
 
@@ -120,6 +119,10 @@ export const UserForm: React.FC<UserFormProps> = ({ user }) => {
     reset();
     dispatch(closeDrawer());
   };
+
+  useEffect(() => {
+    localStorage.setItem('users', JSON.stringify(users));
+  }, [users]);
 
   return (
     <Form layout="vertical" onFinish={handleSubmit(handleFormSubmit)}>
