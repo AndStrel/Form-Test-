@@ -1,4 +1,4 @@
-import { Button } from '@ui/button';
+import { Button } from 'antd';
 import { HomePageUIProps } from './type';
 
 export const HomePageUI: React.FC<HomePageUIProps> = ({
@@ -10,7 +10,7 @@ export const HomePageUI: React.FC<HomePageUIProps> = ({
     <div>
       <h1>{title}</h1>
       <p>{description}</p>
-      <Button variant="primary" onClick={handleLogin}>
+      <Button variant="solid" onClick={handleLogin}>
         Log In
       </Button>
     </div>
