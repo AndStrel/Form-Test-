@@ -22,8 +22,12 @@
     background-color: $secondary-color;
     margin-bottom: 10px;
     margin-top: 10px;
+    border-radius: 16px;
+    font-family: $font-family;
+
 
     &:hover {
+      background: $secondary-color !important;
       opacity: 0.9;
     }
   }

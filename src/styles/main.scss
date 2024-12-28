@@ -1,2 +1,9 @@
-@use './base/reset.scss';
-@use './base/typography.scss';
+@use './base/reset.scss' as *;
+@use './base/typography.scss' as *;
+@use './utils/variables.scss' as *;
+@use './utils/mixins.scss' as *;
+
+
+body {
+ font-family: $font-family;
+}

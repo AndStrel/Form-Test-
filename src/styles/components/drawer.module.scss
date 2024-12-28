@@ -1,0 +1,26 @@
+@use '@styles/utils/variables.scss' as *;
+
+.drawerWrapper {
+  width: 45% !important;
+  font-family: $font-family;
+}
+
+.drawerContent {
+  padding: 0;
+}
+
+.drawerHeader {
+  :nth-child(1) {
+    flex-direction: row-reverse;
+  }
+}
+
+// @media (min-width: 1024px) {
+//   width: 450px;
+// }
+.drawerDescription {
+  margin-bottom: 10px;
+  font-size: 20px;
+  line-height: 120%;
+  font-weight: normal;
+}

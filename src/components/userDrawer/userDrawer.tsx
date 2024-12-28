@@ -3,6 +3,8 @@ import { Drawer } from 'antd';
 import { UserForm } from '@components/userForm/userForm';
 import { RootState, useAppSelector } from '@utils/store';
 import { TUser } from 'types/types';
+import styles from '@styles/components/drawer.module.scss';
+import clsx from 'clsx';
 
 interface DrawerProps {
   title?: string;
@@ -28,16 +30,22 @@ export const UserDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
   }, [isRedacting, userFromState]);
 
   const title = isRedacting
-    ? 'Редактирование пользователя'
-    : 'Добавление пользователя';
+    ? 'Редактировать пользователя'
+    : 'Добавить нового пользователя';
   return (
     <Drawer
       title={title}
       placement="right"
       onClose={onClose}
       open={open}
-      width={500}
+      classNames={{
+        wrapper: clsx(styles.drawerWrapper),
+        content: clsx(styles.drawerContent),
+        header: clsx(styles.drawerHeader),
+        body: clsx(styles.drawerBody),
+      }}
     >
+      <p className={styles.drawerDescription}>Найти в списке</p>
       <UserForm user={user} />
     </Drawer>
   );

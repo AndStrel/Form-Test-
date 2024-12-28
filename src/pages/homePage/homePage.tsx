@@ -20,11 +20,11 @@ export const HomePage: React.FC = () => {
     <>
       <Button
         type="primary"
-        className={clsx(styles.button__secondary)} // Модификаторы styles.button__secondary}
+        className={clsx(styles.button__secondary)}
         icon={<PlusOutlined />}
         onClick={() => createUser()}
       >
-        Создать нового пользователя
+        Добавить нового пользователя
       </Button>
       <UserTable />
     </>
