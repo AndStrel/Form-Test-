@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Drawer } from 'antd';
+import { Drawer, Typography } from 'antd';
 import { UserForm } from '@components/userForm/userForm';
 import { RootState, useAppSelector } from '@utils/store';
 import { TUser } from 'types/types';
-import styles from '@styles/components/drawer.module.scss';
-import clsx from 'clsx';
+import { CloseCircleOutlined, CloseOutlined } from '@ant-design/icons';
+import { StyleEnum } from '@utils/constants';
 
 interface DrawerProps {
   title?: string;
   open: boolean;
   onClose: () => void;
 }
+const { Text } = Typography;
 
 export const UserDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
   const isRedacting = useAppSelector(
@@ -29,24 +30,52 @@ export const UserDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
     }
   }, [isRedacting, userFromState]);
 
-  const title = isRedacting
-    ? 'Редактировать пользователя'
-    : 'Добавить нового пользователя';
   return (
-    <Drawer
-      title={title}
-      placement="right"
-      onClose={onClose}
-      open={open}
-      classNames={{
-        wrapper: clsx(styles.drawerWrapper),
-        content: clsx(styles.drawerContent),
-        header: clsx(styles.drawerHeader),
-        body: clsx(styles.drawerBody),
-      }}
-    >
-      <p className={styles.drawerDescription}>Найти в списке</p>
-      <UserForm user={user} />
-    </Drawer>
+    <>
+      <Drawer
+        title={
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <p
+              style={{
+                fontFamily: StyleEnum.fontFamily,
+                fontSize: '26px',
+              }}
+            >
+              {isRedacting && open
+                ? 'Редактировать пользователя'
+                : 'Добавить нового пользователя'}
+            </p>
+            <CloseOutlined type="primary" onClick={onClose} />
+          </div>
+        }
+        placement="right"
+        closable={false}
+        onClose={onClose}
+        open={open}
+        styles={{
+          wrapper: { width: '45%' },
+          header: { display: 'flex', justifyContent: 'space-between' },
+          content: {
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '20px',
+          },
+        }}
+      >
+        {!isRedacting && open && (
+          <Text style={{ fontSize: '20px', fontFamily: StyleEnum.fontFamily }}>
+            Найти в списке
+          </Text>
+        )}
+
+        <UserForm user={user} />
+      </Drawer>
+    </>
   );
 };

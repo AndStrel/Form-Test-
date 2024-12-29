@@ -35,3 +35,13 @@ export const startUsers: TUser[] = [
     role: 'Доктор',
   },
 ];
+
+export enum StyleEnum {
+  fontFamily = 'Montserrat',
+  Green = '#5ccc81',
+  DarkGren = '#47B26B',
+  Blue = '#4da2d6',
+  Red = '#ff0000',
+  White = '#fff',
+  Dark = '#000',
+}

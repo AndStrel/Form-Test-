@@ -1,4 +1,4 @@
-import { DatePicker, Input, Select } from 'antd';
+import { DatePicker, Input, Radio, Select } from 'antd';
 import dayjs from 'dayjs';
 import { Controller } from 'react-hook-form';
 import { UserFormUIProps } from 'types/types';
