@@ -48,7 +48,7 @@ export const App: React.FC = () => {
     <Router>
       <UserDrawer open={isDrawerOpen} onClose={handleDrawerClose} />
       <Routes>
-        <Route path="/Form-Test/" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
       </Routes>
     </Router>
   );
