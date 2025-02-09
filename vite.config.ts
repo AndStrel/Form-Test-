@@ -5,7 +5,7 @@ import path from 'path';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/Form-Test/',
+  base: '/',
   resolve: {
     alias: {
       '@components': path.resolve(__dirname, 'src/components'),
