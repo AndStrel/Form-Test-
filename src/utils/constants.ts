@@ -1,17 +1,19 @@
-export const startUsers = [
+import { TUser } from 'types/types';
+
+export const startUsers: TUser[] = [
   {
-    id: 1,
+    id: 1245,
     avatar: 'https://i.pravatar.cc/50',
-    first_name: 'Казимир',
-    last_name: 'Антонина',
-    full_name: 'Казимир Антонина',
+    first_name: 'Антонина',
+    last_name: 'Казимир',
+    full_name: 'Антонина Казимир',
     email: 'mail@mail.ru',
     gender: 'Женский',
-    birthDate: '24-10-1998',
+    birthDate: '24-10-1996',
     role: 'Медсестра',
   },
   {
-    id: 2,
+    id: 412341,
     email: 'newuser@mail.ru',
     first_name: 'Варфоломей',
     last_name: 'Иванов',
@@ -22,14 +24,24 @@ export const startUsers = [
     role: 'Доктор',
   },
   {
-    id: 3,
+    id: 63244,
     avatar: 'https://i.pravatar.cc/40',
     first_name: 'Иван',
     last_name: 'Петров',
     full_name: 'Иван Петров',
-    email: 'newuser@mail.ru',
+    email: 'user@mail.ru',
     gender: 'Мужской',
     birthDate: '01-01-2000',
     role: 'Доктор',
   },
 ];
+
+export enum StyleEnum {
+  fontFamily = 'Montserrat',
+  Green = '#5ccc81',
+  DarkGren = '#47B26B',
+  Blue = '#4da2d6',
+  Red = '#ff0000',
+  White = '#fff',
+  Dark = '#000',
+}

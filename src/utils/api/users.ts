@@ -24,12 +24,12 @@ export const getUserById = async (id: number): Promise<TUser> => {
 };
 
 // Редактирование пользователя полностью
-export const fullUpdateUser = async (id: number) => {
+export const createUser = async (id: number) => {
   try {
     const response = await reqResApi.put(`/users/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Ошибка при редактировании пользователя:', error);
+    console.error('Ошибка при добавлении пользователя:', error);
     throw error;
   }
 };

@@ -3,6 +3,7 @@ import { TUser } from 'types/types';
 
 interface UsersState {
   users: TUser[];
+  usersServer: Partial<TUser>[];
   loading: boolean;
   page: number;
   hasMore: boolean;
@@ -10,6 +11,7 @@ interface UsersState {
 
 const initialState: UsersState = {
   users: [],
+  usersServer: [],
   loading: false,
   page: 1,
   hasMore: true,
@@ -30,13 +32,47 @@ const usersSlice = createSlice({
     },
     setUsers: (state, action: PayloadAction<TUser[]>) => {
       state.users = action.payload;
+      localStorage.setItem('users', JSON.stringify(state.users));
     },
-    appendUsers: (state, action: PayloadAction<TUser[]>) => {
-      state.users = [...state.users, ...action.payload];
+    addUserServer: (state, action: PayloadAction<TUser[]>) => {
+      const filteredUsers = action.payload.filter(
+        (user) => !state.usersServer.some((existingUser) => existingUser.id === user.id),
+      );
+      state.usersServer.push(...filteredUsers);
+      localStorage.setItem('users', JSON.stringify(state.users));
+    },
+
+    addUser: (state, action: PayloadAction<TUser>) => {
+      const existingUser = state.users.find((user) => user.id === action.payload.id);
+      if (!existingUser) {
+        state.users.push(action.payload);
+      }
+    },
+    updateUser: (state, action: PayloadAction<TUser>) => {
+      const index = state.users.findIndex((user) => user.id === action.payload.id);
+      if (index !== -1) {
+        state.users[index] = action.payload;
+      } else {
+        state.users.push(action.payload);
+      }
+      localStorage.setItem('users', JSON.stringify(state.users));
+    },
+    deleteUserInState: (state, action: PayloadAction<number>) => {
+      state.users = state.users.filter((user) => user.id !== action.payload);
+      localStorage.setItem('users', JSON.stringify(state.users));
     },
   },
 });
 
-export const { setLoading, setPage, setHasMore, setUsers, appendUsers } = usersSlice.actions;
+export const {
+  setLoading,
+  setPage,
+  setHasMore,
+  setUsers,
+  addUserServer,
+  addUser,
+  updateUser,
+  deleteUserInState,
+} = usersSlice.actions;
 
 export default usersSlice.reducer;

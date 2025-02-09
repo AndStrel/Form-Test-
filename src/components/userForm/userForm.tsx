@@ -1,14 +1,15 @@
 /* eslint-disable indent */
-import { useForm, useFormContext } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import validationSchema from '@utils/validation/validationShema'; // Импортируем схему валидации
 import { UserFormUI } from '@ui/userForm/userFormUI';
 import { TFormValues, TUser } from 'types/types';
 import { Button, Form, Modal, Space } from 'antd';
 import { useEffect } from 'react';
-import { localupdateUser } from '@utils/api/users';
-import { useAppDispatch } from '@utils/store';
+import { createUser, localupdateUser } from '@utils/api/users';
+import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
 import { closeDrawer } from '@utils/slices/drawerSlice';
+import { addUser, updateUser } from '@utils/slices/usersSlice';
 
 interface UserFormProps {
   user?: TUser;
@@ -16,6 +17,7 @@ interface UserFormProps {
 
 export const UserForm: React.FC<UserFormProps> = ({ user }) => {
   const dispatch = useAppDispatch();
+  const users = useAppSelector((state: RootState) => state.users.users);
   const {
     control,
     handleSubmit,
@@ -44,40 +46,84 @@ export const UserForm: React.FC<UserFormProps> = ({ user }) => {
 
   // Сброс значений формы при изменении user
   useEffect(() => {
-    if (user) {
-      reset(
-        user
-          ? {
-              user: user.full_name,
-              gender:
-                user.gender === 'Мужской' || user.gender === 'Женский'
-                  ? user.gender
-                  : undefined,
-              role:
-                user.role === 'Доктор' ||
-                user.role === 'Медбрат' ||
-                user.role === 'Медсестра'
-                  ? user.role
-                  : undefined,
-              birthDate: user.birthDate,
-            }
-          : undefined,
-      );
-    }
+    reset(
+      user
+        ? {
+            user: user.full_name,
+            gender:
+              user.gender === 'Мужской' || user.gender === 'Женский'
+                ? user.gender
+                : undefined,
+            role:
+              user.role === 'Доктор' ||
+              user.role === 'Медбрат' ||
+              user.role === 'Медсестра'
+                ? user.role
+                : undefined,
+            birthDate: user.birthDate,
+          }
+        : {
+            user: undefined,
+            gender: undefined,
+            role: undefined,
+            birthDate: '',
+          }, // Сбрасываем на пустые значения
+    );
   }, [user, reset]);
 
   const gender = watch('gender'); // Отслеживаем значение поля "Пол"
-  // Обработчик отправки формы
+
+  const _user = useAppSelector((state) => state.drawer.user);
+  const task = useAppSelector((state) => state.drawer.isRedacting);
+  const findUserById = (userId: number) =>
+    users.find((user) => user.id === userId);
+
+  const handleActionUser = (user: TUser) => {
+    const existingUser = findUserById(user.id);
+    if (task) {
+      dispatch(updateUser(user));
+      localupdateUser(user.id as number);
+      Modal.success({
+        title: `Пользователь ${user.first_name} ${user.last_name} успешно обновлен`,
+        onOk: () => {},
+      });
+    } else if (existingUser) {
+      Modal.error({
+        title: `Такой пользователь уже существует`,
+        onOk: () => {},
+      });
+      return;
+    } else {
+      dispatch(addUser(user));
+      createUser(user.id);
+      Modal.success({
+        title: `Пользователь ${user.first_name} ${user.last_name} успешно создан`,
+        onOk: () => {},
+      });
+    }
+  };
   const handleFormSubmit = async (data: TFormValues) => {
-    console.log(data);
-    localupdateUser(data.user as unknown as number);
+    // Преобразуем FormData в TUser
+    const newUser: Partial<TUser> = {
+      id: _user?.id,
+      email: _user?.email,
+      first_name: _user?.first_name,
+      last_name: _user?.last_name,
+      full_name: `${_user?.first_name} ${_user?.last_name}`,
+      gender: data.gender,
+      role: data.role,
+      birthDate: data.birthDate,
+      avatar: _user?.avatar,
+    };
+
+    handleActionUser(newUser as TUser);
     reset();
     dispatch(closeDrawer());
-    Modal.success({
-      title: `Пользователь ${data.user} успешно сохранен`,
-      onOk: () => {},
-    });
   };
+
+  useEffect(() => {
+    localStorage.setItem('users', JSON.stringify(users));
+  }, [users]);
 
   return (
     <Form layout="vertical" onFinish={handleSubmit(handleFormSubmit)}>

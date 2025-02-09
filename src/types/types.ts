@@ -19,6 +19,13 @@ export type TFormValues = {
   birthDate: string;
 };
 
+export type FormModalData = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  avatar?: File;
+};
+
 export type UserFormUIProps = {
   control: Control<TFormValues>;
   errors: FieldErrors<TFormValues>;
@@ -28,7 +35,6 @@ export type UserFormUIProps = {
 export type TUserSelectUiProps = {
   control: Control<TFormValues>;
   errors: FieldErrors<TFormValues>;
-  addedUsers: number[];
 };
 
 export type TDrawerState = {

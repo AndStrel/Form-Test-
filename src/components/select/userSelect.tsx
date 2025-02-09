@@ -1,25 +1,32 @@
-import { Form, Modal, Select, Spin, Typography } from 'antd';
+import { Modal, Select, Spin } from 'antd';
 import { Controller } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { getUsers } from '@utils/api/users';
 import { TUser, TUserSelectUiProps } from 'types/types';
 import debounce from 'lodash/debounce';
-import { useAppDispatch } from '@utils/store';
+import { RootState, useAppDispatch, useAppSelector } from '@utils/store';
+import { AddUserForm } from '@components/addUserForm/addUserForm';
+import { setUser } from '@utils/slices/drawerSlice';
+import { addUserServer } from '@utils/slices/usersSlice';
+import { addedUsersSelector } from '@utils/selectors/addedUsersSelector';
 
 const { Option } = Select;
 
 export const UserSelect: React.FC<TUserSelectUiProps> = ({
   control,
-  addedUsers,
   errors,
 }) => {
   const [users, setUsers] = useState<TUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchName, setSearchName] = useState('');
 
   const dispatch = useAppDispatch();
+  const addedUsers = useAppSelector(addedUsersSelector);
+  const isRedacting = useAppSelector(
+    (state: RootState) => state.drawer.isRedacting,
+  );
 
   // Получение пользователей (с пагинацией и фильтром)
   const fetchUsers = async (page: number, search = '') => {
@@ -31,7 +38,13 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
           !addedUsers.includes(user.id) &&
           user.last_name?.toLowerCase().includes(search.toLowerCase()),
       );
-      setUsers((prev) => [...prev, ...filteredUsers]);
+      setUsers((prev) => {
+        const uniqueUsers = [...prev, ...filteredUsers].filter(
+          (v, i, a) => a.findIndex((t) => t.id === v.id) === i, // Убираем дубли
+        );
+        return page === 1 ? filteredUsers : uniqueUsers;
+      });
+      dispatch(addUserServer(data));
       setHasMore(page * 8 < total); // Проверяем, есть ли еще данные
     } catch (error) {
       console.error('Ошибка при загрузке пользователей:', error);
@@ -42,146 +55,123 @@ export const UserSelect: React.FC<TUserSelectUiProps> = ({
 
   // Дебаунс для поиска
   const handleSearch = debounce((value: string) => {
-    setSearchTerm(value);
+    setSearchName(value);
     setUsers([]); // Сбрасываем пользователей при новом поиске
     setPage(1); // Сброс страницы на первую при новом поиске
     fetchUsers(1, value); // Загружаем первую страницу
   }, 300);
 
   // Пагинация при прокрутке
-  const handleScroll = (e: React.UIEvent<HTMLElement, UIEvent>) => {
-    const target = e.target as HTMLElement;
-    // Проверяем, что скроллим в контейнере списка (dropdown)
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement;
+
     if (loading || !hasMore) return;
 
+    // Проверяем, достиг ли пользователь конца списка
     if (target.scrollTop + target.clientHeight >= target.scrollHeight - 50) {
-      // 50px для буфера
-      setPage((prev) => prev + 1); // Загружаем следующую страницу
+      setPage((prev) => prev + 1);
+      fetchUsers(page + 1, searchName);
     }
   };
 
-  const handleAdd = () => {
-    Modal.success({
-      title: `Создать пользователя`,
-      onOk: () => {},
-    });
+  const [open, setOpen] = useState(false);
+
+  const showModal = () => {
+    setOpen(true);
   };
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [form] = Form.useForm();
 
-  // const handleOpenModal = () => {
-  //   setIsModalOpen(true);
-  // };
+  const handleCancel = () => {
+    setOpen(false);
+  };
 
-  // const handleCloseModal = () => {
-  //   setIsModalOpen(false);
-  //   form.resetFields(); // Очистка формы при закрытии
-  // };
-
-  // const handleAddUser = () => {
-  //   form
-  //     .validateFields()
-  //     .then((values) => {
-  //       console.log('Submitted values:', values);
-  //       // Здесь можно добавить обработку, например, отправку данных на сервер
-  //       handleCloseModal();
-  //     })
-  //     .catch((info) => {
-  //       console.error('Validation failed:', info);
-  //     });
-  // };
-
-  // Загрузим данные при изменении страницы
   useEffect(() => {
-    fetchUsers(page, searchTerm);
-  }, [page]); // Только изменяющаяся страница будет вызывать загрузку
+    if (page > 1) {
+      fetchUsers(page, searchName);
+    }
+  }, [page]);
+
+  useEffect(() => {
+    setUsers([]); // Обнуляем пользователей при обновлении addedUsers
+    fetchUsers(1, searchName);
+  }, [addedUsers]);
 
   return (
     <>
       <Controller
         name="user"
         control={control}
+        disabled={isRedacting}
         defaultValue={undefined}
         render={({ field }) => (
-          <Select
-            {...field}
-            showSearch
-            placeholder="Выберите пользователя"
-            notFoundContent={loading ? <Spin size="small" /> : 'Не найдено'}
-            filterOption={false}
-            onSearch={handleSearch}
-            onPopupScroll={handleScroll} // Обновленный обработчик события скролла
-            dropdownRender={(menu) => (
-              <>
-                {menu}
-                {!users.find((user) => user.last_name !== searchTerm) && (
+          <Controller
+            name="user"
+            control={control}
+            disabled={isRedacting}
+            defaultValue={undefined}
+            render={({ field }) => (
+              <Select
+                {...field}
+                showSearch
+                placeholder="Выберите пользователя"
+                notFoundContent={loading ? <Spin size="small" /> : 'Не найдено'}
+                filterOption={false}
+                dropdownRender={(menu) => (
                   <div
+                    onScroll={handleScroll} // Скролл внутри выпадающего списка
                     style={{
-                      padding: '8px',
-                      textAlign: 'center',
-                      cursor: 'pointer',
-                      color: '#1890ff',
-                    }}
-                    onClick={() => {
-                      handleAdd();
+                      maxHeight: '150px', // Ограничиваем высоту
+                      overflowY: 'auto', // Добавляем скролл только здесь
                     }}
                   >
-                    Добавить пользователя
+                    {menu}
+                    {!users.find((user) => user.last_name !== searchName) && (
+                      <div
+                        style={{
+                          padding: '8px',
+                          textAlign: 'center',
+                          cursor: 'pointer',
+                          color: '#1890ff',
+                        }}
+                        onClick={showModal}
+                      >
+                        Добавить пользователя
+                      </div>
+                    )}
                   </div>
                 )}
-              </>
-            )}
-          >
-            {users.map((user, index) => (
-              <Option
-                key={`${user.id}-${index}`} // Уникальный ключ
-                value={user.id}
-                disabled={addedUsers.includes(user.id)}
+                onSearch={handleSearch}
+                onChange={(value) => {
+                  const selectedUser = users.find(
+                    (user) => user.id === Number(value),
+                  );
+                  if (selectedUser) {
+                    dispatch(setUser(selectedUser));
+                  }
+                  field.onChange(value);
+                }}
               >
-                {`${user.last_name} ${user.first_name[0]}.`}
-              </Option>
-            ))}
-          </Select>
+                {users.map((user) => (
+                  <Option
+                    key={user.id} // Уникальный ключ
+                    value={user.id}
+                    disabled={addedUsers.includes(user.id)}
+                  >
+                    {`${user.first_name} ${user.last_name}`}
+                  </Option>
+                ))}
+              </Select>
+            )}
+          />
         )}
       />
-      {/* <Modal
+      <Modal
         title="Добавить пользователя"
-        open={isModalOpen}
-        onCancel={handleCloseModal}
-        onOk={handleAddUser}
-        okText="Сохранить"
-        cancelText="Отмена"
+        open={open}
+        footer={null}
+        onCancel={handleCancel}
       >
-        <Form form={form} layout="vertical" name="add_user_form">
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              { required: true, message: 'Введите email!' },
-              { type: 'email', message: 'Введите корректный email!' },
-            ]}
-          >
-            <Input placeholder="janet.weaver@reqres.in" />
-          </Form.Item>
-          <Form.Item
-            label="Имя"
-            name="first_name"
-            rules={[{ required: true, message: 'Введите имя!' }]}
-          >
-            <Input placeholder="Введите имя" />
-          </Form.Item>
-          <Form.Item
-            label="Фамилия"
-            name="last_name"
-            rules={[{ required: true, message: 'Введите фамилию!' }]}
-          >
-            <Input placeholder="Введите фамилию" />
-          </Form.Item>
-          <Form.Item label="Аватар" name="avatar">
-            <Input placeholder="Введите URL аватара" />
-          </Form.Item>
-        </Form>
-      </Modal> */}
+        <AddUserForm isModal={setOpen} />
+      </Modal>
     </>
   );
 };

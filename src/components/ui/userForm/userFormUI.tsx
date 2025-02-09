@@ -1,4 +1,4 @@
-import { DatePicker, Input, Select } from 'antd';
+import { DatePicker, Input, Radio, Select } from 'antd';
 import dayjs from 'dayjs';
 import { Controller } from 'react-hook-form';
 import { UserFormUIProps } from 'types/types';
@@ -18,15 +18,7 @@ export const UserFormUI: React.FC<UserFormUIProps> = ({
       required
       help={errors.user && <Text type="danger">{errors.user.message}</Text>}
     >
-      <UserSelect
-        control={control}
-        errors={errors}
-        addedUsers={
-          [
-            /* IDs уже добавленных пользователей */
-          ]
-        }
-      />
+      <UserSelect control={control} errors={errors} />
     </Form.Item>
 
     <Form.Item
